@@ -1,28 +1,39 @@
 package cz.macgregor.eden.core.logic.tiles;
 
-import java.lang.reflect.Constructor;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-import cz.macgregor.eden.core.logic.tiles.factory.FieldAction;
-import cz.macgregor.eden.core.logic.tiles.factory.ForestAction;
-import cz.macgregor.eden.core.logic.tiles.factory.MountainAction;
-import cz.macgregor.eden.core.logic.tiles.factory.NullAction;
+import cz.macgregor.eden.core.logic.actions.ActionHolder;
+import cz.macgregor.eden.core.logic.actions.ActionHolder.ActionEntry;
+import cz.macgregor.eden.core.logic.actions.TriggerType;
+import cz.macgregor.eden.core.logic.entities.Subscriber;
 
 public class TileFactory {
 	private static final InstanceHolder INSTANCE = new InstanceHolder();
 	
-	private Map<TileType, Class<?>> fieldActions;
+	private final Map<TileType, ActionEntry[]> defaultActions;
 
-	private TileFactory() {
-		this.fieldActions = new HashMap<>();
-		fieldActions.put(TileType.DESERT, NullAction.class);
-		fieldActions.put(TileType.FOREST, ForestAction.class);
-		fieldActions.put(TileType.GRASS, NullAction.class);
-		fieldActions.put(TileType.MEADOW, NullAction.class);
-		fieldActions.put(TileType.MOUNTAINS, MountainAction.class);
-		fieldActions.put(TileType.ORIGIN, NullAction.class);
-		fieldActions.put(TileType.WATER, NullAction.class);
+	private TileFactory() throws IllegalArgumentException, IllegalAccessException {
+		this.defaultActions = new HashMap<>();
+
+		Class<?> clazz = TileType.class;
+		for (java.lang.reflect.Field fld : clazz.getFields()) {
+			Subscriber subscriberInfo = fld.getAnnotation(Subscriber.class);
+
+			if (fld.getType().equals(TileType.class) && subscriberInfo != null) {
+
+				String[] actions = subscriberInfo.value();
+				List<ActionEntry> entries = new ArrayList<>();
+				for (String action : actions) {
+					entries.add(ActionHolder.byName(action));
+				}
+
+				TileType eType = (TileType) fld.get(null);
+				defaultActions.put(eType, entries.toArray(new ActionEntry[entries.size()]));
+			}
+		}
 	}
 	
 	public static TileFactory getInstance() {
@@ -35,20 +46,16 @@ public class TileFactory {
 	
 	public Field createField(TileType type) {
 		Field fld = new Field(type);
-		FieldAction fldAction = null;
-		
-		try {
-			Class<?> fldActionType = fieldActions.get(type);
-			Constructor<?> actionConstructor = fldActionType.getConstructor(Field.class);
-			fldAction = (FieldAction) actionConstructor.newInstance(fld);
-			
-		} catch (Exception e) {
-			e.printStackTrace();
+
+		ActionEntry[] actions = defaultActions.get(type);
+		if (actions != null) {
+			for (ActionEntry holder : actions) {
+				fld.addAction(holder);
+			}
 		}
 		
-		fld.setFieldAction(fldAction);
-		
-		fld.getFieldAction().createAction();
+		ActionHolder.activateTrigger(TriggerType.CREATE, fld);
+
 		return fld;
 	}
 	
@@ -56,7 +63,11 @@ public class TileFactory {
 		private final TileFactory instance;
 		
 		private InstanceHolder() {
-			this.instance = new TileFactory();
+			try {
+				this.instance = new TileFactory();
+			} catch (IllegalArgumentException | IllegalAccessException e) {
+				throw new RuntimeException("failed to initialize EntityFactory.", e);
+			}
 		}
 
 		public TileFactory getInstance() {

@@ -1,9 +1,7 @@
 package cz.macgregor.eden.core.logic.actions;
 
-import cz.macgregor.eden.core.logic.entities.Entity;
+public interface Action<T extends HasAction> {
 
-public abstract class Action {
-
-	public abstract void doAction(Entity ent);
+	public void doAction(T ent);
 
 }

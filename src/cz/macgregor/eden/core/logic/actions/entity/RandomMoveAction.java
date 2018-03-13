@@ -1,4 +1,4 @@
-package cz.macgregor.eden.core.logic.actions.impl;
+package cz.macgregor.eden.core.logic.actions.entity;
 
 
 import java.awt.Point;
@@ -7,9 +7,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import cz.macgregor.eden.core.logic.GameMap;
-import cz.macgregor.eden.core.logic.actions.Action;
-import cz.macgregor.eden.core.logic.actions.TriggerType;
 import cz.macgregor.eden.core.logic.actions.ActionInfo;
+import cz.macgregor.eden.core.logic.actions.EntityAction;
+import cz.macgregor.eden.core.logic.actions.TriggerType;
 import cz.macgregor.eden.core.logic.entities.Entity;
 import cz.macgregor.eden.core.logic.entities.EntityUtils;
 import cz.macgregor.eden.core.logic.tiles.Field;
@@ -17,7 +17,7 @@ import cz.macgregor.eden.core.logic.tiles.TileType;
 import cz.macgregor.eden.util.Utils;
 
 @ActionInfo(name = "randomMove", trigger = TriggerType.TURN_END)
-public class RandomMoveAction extends Action {
+public class RandomMoveAction implements EntityAction {
 	private static final TileType[] FORBIDDEN_TYPES = new TileType[]{TileType.FOREST, TileType.MOUNTAINS, TileType.WATER};
 
 	@Override

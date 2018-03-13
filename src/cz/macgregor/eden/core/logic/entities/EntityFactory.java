@@ -8,11 +8,12 @@ import java.util.Map;
 
 import cz.macgregor.eden.core.logic.actions.ActionHolder;
 import cz.macgregor.eden.core.logic.actions.ActionHolder.ActionEntry;
+import cz.macgregor.eden.core.logic.actions.TriggerType;
 
 public class EntityFactory {
 	private static EntityFactory instance;
 
-	private Map<EntityType, ActionEntry[]> defaultActions;
+	private final Map<EntityType, ActionEntry[]> defaultActions;
 
 	public static Entity newEntity(EntityType type) {
 		return getInstance().createNew(type);
@@ -40,6 +41,8 @@ public class EntityFactory {
 			}
 		}
 
+		ActionHolder.activateTrigger(TriggerType.CREATE, ent);
+
 		return ent;
 	}
 
@@ -59,7 +62,7 @@ public class EntityFactory {
 				}
 
 				EntityType eType = (EntityType) fld.get(null);
-				defaultActions.put(eType, (ActionEntry[]) entries.toArray(new ActionEntry[entries.size()]));
+				defaultActions.put(eType, entries.toArray(new ActionEntry[entries.size()]));
 			}
 		}
 

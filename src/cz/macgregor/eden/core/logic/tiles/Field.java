@@ -6,8 +6,8 @@ import java.util.Collection;
 import java.util.List;
 
 import cz.macgregor.eden.core.logic.GameMap;
+import cz.macgregor.eden.core.logic.actions.HasAction;
 import cz.macgregor.eden.core.logic.entities.Entity;
-import cz.macgregor.eden.core.logic.tiles.factory.FieldAction;
 
 /**
  * class representing a single field from the game map.
@@ -15,7 +15,7 @@ import cz.macgregor.eden.core.logic.tiles.factory.FieldAction;
  * @author MacGregor
  *
  */
-public class Field {
+public class Field extends HasAction {
 	
 	private GameMap parent;
 
@@ -36,11 +36,6 @@ public class Field {
 	 * TileType.props.
 	 */
 	private TileProps props;
-
-	/**
-	 * actions on field creation and turn end.
-	 */
-	private FieldAction fieldAction;
 	
 	/**
 	 * position where the field is located at.
@@ -54,6 +49,7 @@ public class Field {
 	 *            field type
 	 */
 	public Field(TileType type) {
+		super();
 		this.type = type;
 		this.visible = true;
 		this.selected = false;
@@ -208,20 +204,6 @@ public class Field {
 	 */
 	public void setProps(TileProps props) {
 		this.props = props;
-	}
-
-	/**
-	 * @return field action
-	 */
-	public FieldAction getFieldAction() {
-		return fieldAction;
-	}
-
-	/**
-	 * @param fieldAction field action
-	 */
-	public void setFieldAction(FieldAction fieldAction) {
-		this.fieldAction = fieldAction;
 	}
 	
 	/**

@@ -1,27 +1,27 @@
 package cz.macgregor.eden.core.logic.entities;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import cz.macgregor.eden.core.logic.actions.Action;
 import cz.macgregor.eden.core.logic.actions.ActionHolder.ActionEntry;
+import cz.macgregor.eden.core.logic.actions.HasAction;
 import cz.macgregor.eden.core.logic.tiles.Field;
 
-public class Entity {
+public class Entity extends HasAction {
 	private final EntityType type;
 	
 	private Field field;
 	
-	private Map<String, String> entityProps;
+	private final Map<String, String> entityProps;
 	
-	private List<Action> actions;
+	private List<Action<HasAction>> actions;
 
 	public Entity(EntityType type) {
+		super();
 		this.type = type;
 		this.entityProps = new HashMap<>();
-		this.setActions(new ArrayList<>());
 	}
 	
 	public void setProp(String key, String value) {
@@ -34,19 +34,6 @@ public class Entity {
 	
 	public boolean hasProp(String key) {
 		return entityProps.containsKey(key);
-	}
-
-	public List<Action> getActions() {
-		return actions;
-	}
-
-	public void setActions(List<Action> actions) {
-		this.actions = actions;
-	}
-	
-	public void addAction(ActionEntry action) {
-		this.actions.add(action.getAction());
-		action.addSubscriber(this);
 	}
 	
 	public void removeAction(ActionEntry action) {

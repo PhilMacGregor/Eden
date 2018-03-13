@@ -1,15 +1,15 @@
-package cz.macgregor.eden.core.logic.actions.impl;
+package cz.macgregor.eden.core.logic.actions.entity;
 
-import cz.macgregor.eden.core.logic.actions.Action;
-import cz.macgregor.eden.core.logic.actions.TriggerType;
 import cz.macgregor.eden.core.logic.actions.ActionInfo;
+import cz.macgregor.eden.core.logic.actions.EntityAction;
+import cz.macgregor.eden.core.logic.actions.TriggerType;
 import cz.macgregor.eden.core.logic.entities.Entity;
 import cz.macgregor.eden.core.logic.entities.EntityFactory;
 import cz.macgregor.eden.core.logic.entities.EntityType;
 import cz.macgregor.eden.core.logic.tiles.Field;
 
 @ActionInfo(name = "procreate", trigger = TriggerType.TURN_END)
-public class ProcreateAction extends Action {
+public class ProcreateAction implements EntityAction {
 
 	@Override
 	public void doAction(Entity ent) {

@@ -11,9 +11,9 @@ import cz.macgregor.eden.util.filecrawler.FileCrawler;
 import cz.macgregor.eden.util.filecrawler.ResourceEntry;
 
 public class ActionHolder {
-	private Map<String, ActionEntry> entries;
+	private final Map<String, ActionEntry> entries;
 
-	private Map<TriggerType, List<ActionEntry>> entriesByTrigger;
+	private final Map<TriggerType, List<ActionEntry>> entriesByTrigger;
 
 	public static ActionHolder getInstance() {
 		return InstanceHolder.INSTANCE.instance;
@@ -25,16 +25,21 @@ public class ActionHolder {
 
 		try {
 			Collection<ResourceEntry<?>> resources = FileCrawler.getInstance()
-					.searchFolder("cz.macgregor.eden.core.logic.actions.impl", ".class");
+			    .searchFolder("cz.macgregor.eden.core.logic.actions", ".class");
 			for (ResourceEntry<?> res : resources) {
 				Class<?> clazz = (Class<?>) res.getResource();
 				ActionInfo actionInfo = clazz.getAnnotation(ActionInfo.class);
 
-				ActionEntry entry = new ActionEntry(actionInfo.trigger(), (Action) clazz.newInstance());
+				if (actionInfo == null) {
+					continue;
+				}
+
+				@SuppressWarnings("unchecked")
+				ActionEntry entry = new ActionEntry(actionInfo.trigger(), (Action<HasAction>) clazz.newInstance());
 				entries.put(actionInfo.name(), entry);
 				getActionsByTrigger(actionInfo.trigger()).add(entry);
 			}
-			
+
 		} catch (IllegalAccessException | InstantiationException e) {
 			throw new RuntimeException("failed to instantiate the action.", e);
 		}
@@ -53,7 +58,7 @@ public class ActionHolder {
 		}
 
 	}
-	
+
 	public List<ActionEntry> getActionsByTrigger(TriggerType trig) {
 		Map<TriggerType, List<ActionEntry>> entryMap = this.entriesByTrigger;
 		List<ActionEntry> entriesByTrigger = entryMap.get(trig);
@@ -73,17 +78,17 @@ public class ActionHolder {
 	public static void activateTrigger(TriggerType trig) {
 		for (ActionEntry holder : actionsByTrigger(trig)) {
 
-			for (Entity ent : holder.subscribers) {
+			for (HasAction ent : holder.subscribers) {
 				holder.action.doAction(ent);
 			}
 
 		}
 	}
 
-	public static void activateTrigger(TriggerType trig, Entity... ents) {
+	public static void activateTrigger(TriggerType trig, HasAction... ents) {
 		for (ActionEntry holder : actionsByTrigger(trig)) {
 
-			for (Entity ent : ents) {
+			for (HasAction ent : ents) {
 				if (ent.getActions().contains(holder.action)) {
 					holder.action.doAction(ent);
 				}
@@ -94,17 +99,17 @@ public class ActionHolder {
 	}
 
 	public class ActionEntry {
-		private final Action action;
-		private final TriggerType trigger;
-		private final List<Entity> subscribers;
+		private final Action<HasAction>	action;
+		private final TriggerType				trigger;
+		private final List<HasAction>		subscribers;
 
-		private ActionEntry(TriggerType trigger, Action action) {
+		private ActionEntry(TriggerType trigger, Action<HasAction> action) {
 			this.trigger = trigger;
 			this.action = action;
 			this.subscribers = new ArrayList<>();
 		}
 
-		public void addSubscriber(Entity ent) {
+		public void addSubscriber(HasAction ent) {
 			subscribers.add(ent);
 		}
 
@@ -115,10 +120,10 @@ public class ActionHolder {
 		/**
 		 * @return the action
 		 */
-		public Action getAction() {
+		public Action<HasAction> getAction() {
 			return action;
 		}
-		
+
 		@Override
 		public String toString() {
 			return action.getClass().getSimpleName() + " - trigger: " + trigger;
