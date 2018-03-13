@@ -46,17 +46,19 @@ public class TileFactory {
 	
 	public Field createField(TileType type) {
 		Field fld = new Field(type);
+		addDefaultActions(fld);
+		ActionHolder.activateTrigger(TriggerType.CREATE, fld);
 
-		ActionEntry[] actions = defaultActions.get(type);
+		return fld;
+	}
+	
+	private void addDefaultActions(Field fld) {
+		ActionEntry[] actions = defaultActions.get(fld.getType());
 		if (actions != null) {
 			for (ActionEntry holder : actions) {
 				fld.addAction(holder);
 			}
 		}
-		
-		ActionHolder.activateTrigger(TriggerType.CREATE, fld);
-
-		return fld;
 	}
 	
 	private static class InstanceHolder {

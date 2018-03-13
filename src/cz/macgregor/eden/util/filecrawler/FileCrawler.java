@@ -2,6 +2,7 @@ package cz.macgregor.eden.util.filecrawler;
 
 import java.io.File;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -67,7 +68,9 @@ public class FileCrawler {
 		initExtensions();
 
 		try {
-			File rootFld = new File(this.getClass().getClassLoader().getResource("").toURI());
+			URL url = this.getClass().getClassLoader().getResource("");
+			System.out.println("FileCrawler searching folders: " + url);
+			File rootFld = new File(url.toURI());
 			FolderResource fldRes = addFolderResource(rootFld, "", new FolderResource());
 			lookupFolder(fldRes, rootFld, "");
 
@@ -125,7 +128,11 @@ public class FileCrawler {
 
 	private String getFileExtension(File file) {
 		String fName = file.getName();
-		return fName.substring(file.getName().lastIndexOf("."));
+		int extensionStart = fName.lastIndexOf(".");
+		if (extensionStart < 0) {
+			return "";
+		}
+		return fName.substring(extensionStart);
 	}
 
 	private void initExtensions() {

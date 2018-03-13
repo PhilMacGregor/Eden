@@ -75,7 +75,7 @@ public class ActionHolder {
 		return getInstance().getActionsByTrigger(trig);
 	}
 
-	public static void activateTrigger(TriggerType trig) {
+	public static synchronized void activateTrigger(TriggerType trig) {
 		for (ActionEntry holder : actionsByTrigger(trig)) {
 
 			for (HasAction ent : holder.subscribers) {

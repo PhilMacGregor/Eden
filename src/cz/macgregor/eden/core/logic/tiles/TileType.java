@@ -28,7 +28,7 @@ public enum TileType {
 	 */
 	ORIGIN("The Origin", "img.tile.holyTree.png", new TileProps().withWater(false).withCanBuild(false).withFertility(0).withWood(0).withStone(0).withOre(0).withDanger(0), false),
 	/** forest. */
-	@Subscriber({ "createTrees" })
+	@Subscriber({ "createTrees", "growForest" })
 	FOREST("forest", "img.tile.forestGround.png", new TileProps().withWater(false).withCanBuild(false).withFertility(0).withWood(1).withStone(0).withOre(0).withDanger(1), true),
 	/** fertile grass. */
 	GRASS("grass", "img.tile.grass.png", new TileProps().withWater(false).withCanBuild(true).withFertility(2).withWood(0).withStone(0).withOre(0).withDanger(0), true),
