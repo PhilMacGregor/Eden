@@ -1,4 +1,4 @@
-package cz.macgregor.eden.grf.components;
+package cz.macgregor.eden.grf.components.drawactions;
 
 import java.awt.Graphics;
 import java.awt.Point;

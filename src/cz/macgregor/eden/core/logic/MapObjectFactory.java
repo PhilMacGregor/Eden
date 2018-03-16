@@ -19,7 +19,9 @@ public class MapObjectFactory {
 	}
 
 	public static Entity createEntity(Identifier<Entity> type) {
-		return getInstance().entityCreator.create(type);
+		Entity prototype = getInstance().entityCreator.create(type);
+
+		return prototype;
 	}
 
 	private static HasAction createNew(HasAction obj) {
@@ -28,7 +30,7 @@ public class MapObjectFactory {
 		return obj;
 	}
 
-	private static void addDefaultActions(HasAction obj) {
+	public static void addDefaultActions(HasAction obj) {
 		ActionEntry[] actions = ActionHolder.getDefaultActions(obj.getType());
 		if (actions != null) {
 			for (ActionEntry holder : actions) {

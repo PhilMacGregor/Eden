@@ -1,9 +1,12 @@
 package cz.macgregor.eden.grf.components.drawer;
 
 import java.awt.Graphics;
+import java.awt.Point;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import javax.swing.ImageIcon;
 
@@ -13,31 +16,38 @@ import cz.macgregor.eden.util.Const;
 import cz.macgregor.eden.util.Utils;
 
 public class RandomDrawer implements EntityDrawer {
-	private static final int Y_OFFSET_TOP = 15;
+	private static final int	Y_OFFSET_TOP		= 5;
 	private static final int Y_OFFSET_BOTTOM = 5;
 
 	@Override
 	public void draw(Graphics g, List<Entity> ents, int x, int y) {
-		Entity[] entsArray = sortEntitiesByHeight(ents);
+		Map<Point, ImageIcon> entsWithCoords = new TreeMap<>();
 
+		Entity[] entsArray = sortEntitiesByHeight(ents);
 		for (int i = 0; i < entsArray.length; i++) {
 			Entity ent = entsArray[i];
 			
-			ImageIcon img = ent.getType().getImage();
-
 			int randX;
 			int randY;
+
+			ImageIcon img = ent.getType().getImage();
 
 			if (ent instanceof EntityWithPosition) {
 				randX = x + ((EntityWithPosition) ent).getCoordsX();
 				randY = y + ((EntityWithPosition) ent).getCoordsY();
 			} else {
 				randX = x + (Utils.randomInt(0, Const.TILE_WIDTH - img.getIconWidth()));
-				randY = y + (Utils.randomInt(-Y_OFFSET_TOP, Y_OFFSET_BOTTOM));
+				randY = y + (Utils.randomInt(0 - Y_OFFSET_TOP, Const.TILE_HEIGHT - img.getIconHeight() - Y_OFFSET_BOTTOM));
 			}
 
-			g.drawImage(img.getImage(), randX, randY, null);
+			entsWithCoords.put(new PointByHeight(randX, randY), img);
 		}
+
+		for (Point pt : entsWithCoords.keySet()) {
+			ImageIcon img = entsWithCoords.get(pt);
+			g.drawImage(img.getImage(), pt.x, pt.y, null);
+		}
+
 	}
 	
 	private Entity[] sortEntitiesByHeight(List<Entity> ents) {
@@ -58,6 +68,20 @@ public class RandomDrawer implements EntityDrawer {
 				return 0;
 			}
 		}
+	}
+
+	private class PointByHeight extends Point implements Comparable<Point> {
+		private static final long serialVersionUID = 1L;
+
+		private PointByHeight(int x, int y) {
+			super(x, y);
+		}
+
+		@Override
+		public int compareTo(Point o) {
+			return this.y - o.y;
+		}
+
 	}
 
 }

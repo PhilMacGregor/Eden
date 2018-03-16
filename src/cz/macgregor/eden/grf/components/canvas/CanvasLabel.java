@@ -1,4 +1,4 @@
-package cz.macgregor.eden.grf.components;
+package cz.macgregor.eden.grf.components.canvas;
 
 import java.awt.Graphics;
 import java.awt.Point;
@@ -13,6 +13,7 @@ import cz.macgregor.eden.core.logic.entities.DrawTarget;
 import cz.macgregor.eden.core.logic.entities.DrawTarget.Direction;
 import cz.macgregor.eden.core.logic.patterns.StandardPattern;
 import cz.macgregor.eden.core.logic.tiles.FieldInfo;
+import cz.macgregor.eden.grf.components.drawactions.DrawAction;
 import cz.macgregor.eden.grf.components.drawactions.DrawEntities;
 import cz.macgregor.eden.grf.components.drawactions.DrawInfo;
 import cz.macgregor.eden.grf.components.drawactions.DrawTiles;

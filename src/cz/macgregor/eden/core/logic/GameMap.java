@@ -13,6 +13,7 @@ import cz.macgregor.eden.core.logic.patterns.Pattern;
 import cz.macgregor.eden.core.logic.patterns.RectanglePattern;
 import cz.macgregor.eden.core.logic.tiles.Field;
 import cz.macgregor.eden.core.logic.tiles.FieldInfo;
+import cz.macgregor.eden.grf.components.top.ValueIndicators;
 
 public class GameMap {
 	public static final boolean WITH_ORIGIN = true;
@@ -53,6 +54,9 @@ public class GameMap {
 		checkMaxAndMinCoords(coords);
 		get(coords).setField(field);
 		field.setParent(this);
+
+		ValueIndicators.MAP.update(1);
+
 		return field;
 	}
 	

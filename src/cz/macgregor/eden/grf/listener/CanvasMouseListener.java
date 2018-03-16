@@ -8,7 +8,7 @@ import java.util.List;
 import cz.macgregor.eden.core.logic.entities.Entity;
 import cz.macgregor.eden.core.logic.entities.EntityUtils;
 import cz.macgregor.eden.core.logic.tiles.Field;
-import cz.macgregor.eden.grf.components.CanvasLabel;
+import cz.macgregor.eden.grf.components.canvas.CanvasLabel;
 import cz.macgregor.eden.util.Const;
 
 public class CanvasMouseListener implements MouseListener {

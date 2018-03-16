@@ -4,7 +4,6 @@ import java.awt.Point;
 
 import cz.macgregor.eden.core.logic.MapGenerator;
 import cz.macgregor.eden.core.logic.actions.ActionInfo;
-import cz.macgregor.eden.core.logic.actions.EntityAction;
 import cz.macgregor.eden.core.logic.actions.TriggerType;
 import cz.macgregor.eden.core.logic.entities.Entity;
 import cz.macgregor.eden.core.logic.patterns.RectanglePattern;

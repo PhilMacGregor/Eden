@@ -5,7 +5,6 @@ import java.awt.Graphics;
 import java.awt.Point;
 
 import cz.macgregor.eden.core.logic.tiles.Field;
-import cz.macgregor.eden.grf.components.DrawAction;
 import cz.macgregor.eden.util.Const;
 
 public class DrawInfo implements DrawAction {

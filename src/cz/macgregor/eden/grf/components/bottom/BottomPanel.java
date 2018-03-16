@@ -1,4 +1,4 @@
-package cz.macgregor.eden.grf.components;
+package cz.macgregor.eden.grf.components.bottom;
 
 import java.awt.Dimension;
 

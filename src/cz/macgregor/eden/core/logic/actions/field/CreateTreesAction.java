@@ -1,7 +1,6 @@
 package cz.macgregor.eden.core.logic.actions.field;
 
 import cz.macgregor.eden.core.logic.actions.ActionInfo;
-import cz.macgregor.eden.core.logic.actions.FieldAction;
 import cz.macgregor.eden.core.logic.actions.TriggerType;
 import cz.macgregor.eden.core.logic.entities.EntityType;
 import cz.macgregor.eden.core.logic.entities.EntityWithPosition;

@@ -2,11 +2,11 @@ package cz.macgregor.eden.core.logic.actions.entity;
 
 import cz.macgregor.eden.core.logic.MapObjectFactory;
 import cz.macgregor.eden.core.logic.actions.ActionInfo;
-import cz.macgregor.eden.core.logic.actions.EntityAction;
 import cz.macgregor.eden.core.logic.actions.TriggerType;
 import cz.macgregor.eden.core.logic.entities.Entity;
 import cz.macgregor.eden.core.logic.entities.EntityType;
 import cz.macgregor.eden.core.logic.tiles.Field;
+import cz.macgregor.eden.grf.components.top.ValueIndicators;
 import cz.macgregor.eden.util.Utils;
 
 @ActionInfo(name = "birth", trigger = TriggerType.TURN_START)
@@ -40,7 +40,7 @@ public class BirthAction implements EntityAction {
 			fld.addEntity(newBorn);
 			fld.addEntity(MapObjectFactory.createEntity(EntityType.DWELLER_COUNT));
 			
-			System.out.println("New human was born: " + newBorn.getType());
+			ValueIndicators.POPULATION.update(1);
 		}
 	}
 

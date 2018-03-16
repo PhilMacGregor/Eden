@@ -4,9 +4,9 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
-import cz.macgregor.eden.core.logic.MapObjectFactory;
 import cz.macgregor.eden.core.logic.GameMap;
 import cz.macgregor.eden.core.logic.MapGenerator;
+import cz.macgregor.eden.core.logic.MapObjectFactory;
 import cz.macgregor.eden.core.logic.Sprites;
 import cz.macgregor.eden.core.logic.actions.ActionHolder;
 import cz.macgregor.eden.core.logic.actions.TriggerType;
@@ -17,6 +17,7 @@ import cz.macgregor.eden.core.logic.tiles.Field;
 import cz.macgregor.eden.core.logic.tiles.FieldInfo;
 import cz.macgregor.eden.core.logic.tiles.TileType;
 import cz.macgregor.eden.grf.GraphicHandler;
+import cz.macgregor.eden.grf.components.top.ValueIndicators;
 import cz.macgregor.eden.util.Const;
 import cz.macgregor.eden.util.Utils;
 
@@ -66,6 +67,7 @@ public class GameHandler {
 
 		map.get(1, 0).getField().addEntity(MapObjectFactory.createEntity(EntityType.ADAM));
 		map.get(-1, 0).getField().addEntity(MapObjectFactory.createEntity(EntityType.EVE));
+		ValueIndicators.POPULATION.update(2);
 
 //		map.get(1, 1).getField().addEntity(EntityFactory.newEntity(EntityType.BUILDING));
 		
@@ -112,6 +114,11 @@ public class GameHandler {
 	public void reset() {
 		ActionHolder.reset();
 		graphics.setFocusPoint(new Point(0, 0));
+
+		for (ValueIndicators ind : ValueIndicators.values()) {
+			ind.reset();
+		}
+
 		init();
 	}
 

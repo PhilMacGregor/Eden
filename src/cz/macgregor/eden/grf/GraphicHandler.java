@@ -13,12 +13,13 @@ import cz.macgregor.eden.core.logic.GameMap;
 import cz.macgregor.eden.core.logic.entities.DrawTarget;
 import cz.macgregor.eden.core.logic.entities.DrawTarget.Direction;
 import cz.macgregor.eden.core.logic.entities.EntityType;
-import cz.macgregor.eden.grf.components.BottomPanel;
-import cz.macgregor.eden.grf.components.CanvasLabel;
+import cz.macgregor.eden.grf.components.bottom.BottomPanel;
+import cz.macgregor.eden.grf.components.canvas.CanvasLabel;
 import cz.macgregor.eden.grf.components.drawer.CenterDrawer;
 import cz.macgregor.eden.grf.components.drawer.EntityDrawer;
 import cz.macgregor.eden.grf.components.drawer.RandomDrawer;
 import cz.macgregor.eden.grf.components.drawer.SimpleDrawer;
+import cz.macgregor.eden.grf.components.top.TopPanel;
 import cz.macgregor.eden.grf.listener.CanvasKeyListener;
 import cz.macgregor.eden.util.Const;
 import cz.macgregor.eden.util.Utils;
@@ -36,6 +37,8 @@ public class GraphicHandler {
 	private final CanvasLabel canvasLabel;
 	/** bottom panel with context information. */
 	private final BottomPanel	bottomPanel;
+	/** top panel with context information. */
+	private final TopPanel		topPanel;
 	/** focus point for the canvas label. */
 	private Point focusPoint;
 	/** application window. */
@@ -72,14 +75,18 @@ public class GraphicHandler {
 		canvasLabel.setFocusable(true);
 		
 		this.bottomPanel = new BottomPanel();
+		this.topPanel = new TopPanel();
 
 		this.focusPoint = new Point(0, 0);
 		
 		frame.add(canvasLabel, BorderLayout.CENTER);
+		frame.add(topPanel, BorderLayout.NORTH);
 		frame.add(bottomPanel, BorderLayout.SOUTH);
 		frame.pack();
 		frame.setResizable(false);
 		
+		canvasLabel.requestFocus();
+
 		Utils.moveToCenter(frame);
 	}
 
@@ -150,7 +157,7 @@ public class GraphicHandler {
 		DrawTarget.LAYER_GROUND.addEntity(EntityType.EVE, Direction.RANDOM);
 		DrawTarget.LAYER_GROUND.addEntity(EntityType.SETH, Direction.RANDOM);
 
-		DrawTarget.LAYER_GROUND.addEntity(EntityType.BUILDING, Direction.CENTER);
+		DrawTarget.LAYER_GROUND.addEntity(EntityType.BUILDING, Direction.RANDOM);
 
 		DrawTarget.LAYER_GROUND.addEntity(EntityType.PINETREE, Direction.RANDOM);
 		DrawTarget.LAYER_GROUND.addEntity(EntityType.MOUNTAIN, Direction.RANDOM);

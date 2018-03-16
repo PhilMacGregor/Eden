@@ -12,7 +12,6 @@ import cz.macgregor.eden.core.logic.entities.DrawTarget.Direction;
 import cz.macgregor.eden.core.logic.entities.Entity;
 import cz.macgregor.eden.core.logic.entities.EntityType;
 import cz.macgregor.eden.core.logic.tiles.Field;
-import cz.macgregor.eden.grf.components.DrawAction;
 import cz.macgregor.eden.grf.components.drawer.EntityDrawer;
 
 public class DrawEntities implements DrawAction {

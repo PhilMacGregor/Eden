@@ -8,7 +8,6 @@ import java.util.List;
 
 import cz.macgregor.eden.core.logic.GameMap;
 import cz.macgregor.eden.core.logic.actions.ActionInfo;
-import cz.macgregor.eden.core.logic.actions.EntityAction;
 import cz.macgregor.eden.core.logic.actions.TriggerType;
 import cz.macgregor.eden.core.logic.entities.Entity;
 import cz.macgregor.eden.core.logic.entities.EntityUtils;
