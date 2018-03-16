@@ -7,20 +7,18 @@ import java.util.Map;
 import cz.macgregor.eden.core.logic.actions.Action;
 import cz.macgregor.eden.core.logic.actions.ActionHolder.ActionEntry;
 import cz.macgregor.eden.core.logic.actions.HasAction;
+import cz.macgregor.eden.core.logic.actions.Identifier;
 import cz.macgregor.eden.core.logic.tiles.Field;
 
 public class Entity extends HasAction {
-	private final EntityType type;
-	
 	private Field field;
 	
 	private final Map<String, String> entityProps;
 	
 	private List<Action<HasAction>> actions;
 
-	public Entity(EntityType type) {
-		super();
-		this.type = type;
+	public Entity(Identifier<Entity> type) {
+		super(type);
 		this.entityProps = new HashMap<>();
 	}
 	
@@ -48,9 +46,15 @@ public class Entity extends HasAction {
 	public void setField(Field field) {
 		this.field = field;
 	}
-
-	public EntityType getType() {
-		return type;
-	}
 	
+	@Override
+	public EntityType getType() {
+		return (EntityType) super.getType();
+	}
+
+	@Override
+	public String toString() {
+		return getType() + ": " + super.toString();
+	}
+
 }

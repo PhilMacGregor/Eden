@@ -4,18 +4,17 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
+import cz.macgregor.eden.core.logic.MapObjectFactory;
 import cz.macgregor.eden.core.logic.GameMap;
 import cz.macgregor.eden.core.logic.MapGenerator;
 import cz.macgregor.eden.core.logic.Sprites;
 import cz.macgregor.eden.core.logic.actions.ActionHolder;
 import cz.macgregor.eden.core.logic.actions.TriggerType;
-import cz.macgregor.eden.core.logic.entities.EntityFactory;
 import cz.macgregor.eden.core.logic.entities.EntityType;
 import cz.macgregor.eden.core.logic.patterns.DiamondPattern;
 import cz.macgregor.eden.core.logic.patterns.RectanglePattern;
 import cz.macgregor.eden.core.logic.tiles.Field;
 import cz.macgregor.eden.core.logic.tiles.FieldInfo;
-import cz.macgregor.eden.core.logic.tiles.TileFactory;
 import cz.macgregor.eden.core.logic.tiles.TileType;
 import cz.macgregor.eden.grf.GraphicHandler;
 import cz.macgregor.eden.util.Const;
@@ -60,13 +59,13 @@ public class GameHandler {
 
 		Point startPoint = new Point(0, 0);
 
-		map.put(startPoint, TileFactory.newField(TileType.ORIGIN));
-		mapGen.fillPattern(new DiamondPattern(), startPoint, new Point(2, 2), TileFactory.newField(TileType.GRASS));
+		map.put(startPoint, MapObjectFactory.createField(TileType.ORIGIN));
+		mapGen.fillPattern(new DiamondPattern(), startPoint, new Point(2, 2), MapObjectFactory.createField(TileType.GRASS));
 
 		mapGen.fillPattern(new RectanglePattern(), startPoint, new Point(INITIAL_MAP_SIZE, INITIAL_MAP_SIZE));
 
-		map.get(1, 0).getField().addEntity(EntityFactory.newEntity(EntityType.ADAM));
-		map.get(-1, 0).getField().addEntity(EntityFactory.newEntity(EntityType.EVE));
+		map.get(1, 0).getField().addEntity(MapObjectFactory.createEntity(EntityType.ADAM));
+		map.get(-1, 0).getField().addEntity(MapObjectFactory.createEntity(EntityType.EVE));
 
 //		map.get(1, 1).getField().addEntity(EntityFactory.newEntity(EntityType.BUILDING));
 		
@@ -98,7 +97,7 @@ public class GameHandler {
 			Field fieldToPopulate = fldInfos[Utils.randomInt(0, fldInfos.length - 1)].getField();
 			
 			if (fieldToPopulate != null && fieldToPopulate.getType().getDefaultProps().isCanBuild()) {
-				fieldToPopulate.addEntity(EntityFactory.newEntity(entsToPlace.get(Utils.randomInt(0, entsToPlace.size()))));
+				fieldToPopulate.addEntity(MapObjectFactory.createEntity(entsToPlace.get(Utils.randomInt(0, entsToPlace.size()))));
 				
 				nrOfEntities--;
 				

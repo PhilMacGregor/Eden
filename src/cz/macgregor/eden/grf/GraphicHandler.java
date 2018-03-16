@@ -11,8 +11,8 @@ import javax.swing.JFrame;
 import cz.macgregor.eden.core.GameHandler;
 import cz.macgregor.eden.core.logic.GameMap;
 import cz.macgregor.eden.core.logic.entities.DrawTarget;
-import cz.macgregor.eden.core.logic.entities.EntityType;
 import cz.macgregor.eden.core.logic.entities.DrawTarget.Direction;
+import cz.macgregor.eden.core.logic.entities.EntityType;
 import cz.macgregor.eden.grf.components.BottomPanel;
 import cz.macgregor.eden.grf.components.CanvasLabel;
 import cz.macgregor.eden.grf.components.drawer.CenterDrawer;
@@ -146,11 +146,11 @@ public class GraphicHandler {
 		DrawTarget.LAYER_CLOUDS.addEntity(EntityType.DEBUG_E, Direction.E);
 		DrawTarget.LAYER_CLOUDS.addEntity(EntityType.DEBUG_W, Direction.W);
 
-		DrawTarget.LAYER_BIO.addEntity(EntityType.ADAM, Direction.CENTER);
-		DrawTarget.LAYER_BIO.addEntity(EntityType.EVE, Direction.CENTER);
-		DrawTarget.LAYER_BIO.addEntity(EntityType.SETH, Direction.CENTER);
+		DrawTarget.LAYER_GROUND.addEntity(EntityType.ADAM, Direction.RANDOM);
+		DrawTarget.LAYER_GROUND.addEntity(EntityType.EVE, Direction.RANDOM);
+		DrawTarget.LAYER_GROUND.addEntity(EntityType.SETH, Direction.RANDOM);
 
-		DrawTarget.LAYER_STRUCT.addEntity(EntityType.BUILDING, Direction.CENTER);
+		DrawTarget.LAYER_GROUND.addEntity(EntityType.BUILDING, Direction.CENTER);
 
 		DrawTarget.LAYER_GROUND.addEntity(EntityType.PINETREE, Direction.RANDOM);
 		DrawTarget.LAYER_GROUND.addEntity(EntityType.MOUNTAIN, Direction.RANDOM);

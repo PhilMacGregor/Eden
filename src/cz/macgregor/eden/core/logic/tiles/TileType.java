@@ -7,6 +7,7 @@ import java.util.List;
 import javax.swing.ImageIcon;
 
 import cz.macgregor.eden.core.logic.Sprites;
+import cz.macgregor.eden.core.logic.actions.Identifier;
 import cz.macgregor.eden.core.logic.entities.Subscriber;
 import cz.macgregor.eden.util.Utils;
 
@@ -15,7 +16,7 @@ import cz.macgregor.eden.util.Utils;
  * 
  * @author MacGregor
  */
-public enum TileType {
+public enum TileType implements Identifier<Field> {
   // name, image, is water, can build on, fertility, wood, stone, ore, danger
 
 	/** tile type to hold an image for unknown tiles. */

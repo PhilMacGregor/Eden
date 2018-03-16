@@ -1,10 +1,10 @@
 package cz.macgregor.eden.core.logic.actions.entity;
 
+import cz.macgregor.eden.core.logic.MapObjectFactory;
 import cz.macgregor.eden.core.logic.actions.ActionInfo;
 import cz.macgregor.eden.core.logic.actions.EntityAction;
 import cz.macgregor.eden.core.logic.actions.TriggerType;
 import cz.macgregor.eden.core.logic.entities.Entity;
-import cz.macgregor.eden.core.logic.entities.EntityFactory;
 import cz.macgregor.eden.core.logic.entities.EntityType;
 import cz.macgregor.eden.core.logic.tiles.Field;
 import cz.macgregor.eden.util.Utils;
@@ -36,9 +36,9 @@ public class BirthAction implements EntityAction {
 		if (doBirth >= probability - 1) {
 			int isMale = Utils.randomInt(0, 2);
 			
-			Entity newBorn = EntityFactory.newEntity(isMale == 1 ? EntityType.ADAM : EntityType.EVE);
+			Entity newBorn = MapObjectFactory.createEntity(isMale == 1 ? EntityType.ADAM : EntityType.EVE);
 			fld.addEntity(newBorn);
-			fld.addEntity(EntityFactory.newEntity(EntityType.DWELLER_COUNT));
+			fld.addEntity(MapObjectFactory.createEntity(EntityType.DWELLER_COUNT));
 			
 			System.out.println("New human was born: " + newBorn.getType());
 		}

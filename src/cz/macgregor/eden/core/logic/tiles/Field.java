@@ -7,7 +7,9 @@ import java.util.List;
 
 import cz.macgregor.eden.core.logic.GameMap;
 import cz.macgregor.eden.core.logic.actions.HasAction;
+import cz.macgregor.eden.core.logic.actions.Identifier;
 import cz.macgregor.eden.core.logic.entities.Entity;
+import cz.macgregor.eden.core.logic.entities.EntityType;
 
 /**
  * class representing a single field from the game map.
@@ -18,9 +20,6 @@ import cz.macgregor.eden.core.logic.entities.Entity;
 public class Field extends HasAction {
 	
 	private GameMap parent;
-
-	/** type of the field. */
-	private TileType type;
 	
 	/**
 	 * is visible (do show this field on the map. Otherwise, show only an
@@ -48,31 +47,11 @@ public class Field extends HasAction {
 	 * @param type
 	 *            field type
 	 */
-	public Field(TileType type) {
-		super();
-		this.type = type;
+	public Field(Identifier<Field> type) {
+		super(type);
 		this.visible = true;
 		this.selected = false;
 		this.entities = new ArrayList<>();
-	}
-
-	/**
-	 * getter.
-	 * 
-	 * @return field type
-	 */
-	public TileType getType() {
-		return type;
-	}
-
-	/**
-	 * setter.
-	 * 
-	 * @param type
-	 *            field type
-	 */
-	public void setType(TileType type) {
-		this.type = type;
 	}
 
 	/**
@@ -150,7 +129,7 @@ public class Field extends HasAction {
 	public List<Entity> getMovableEntities() {
 		List<Entity> ents = new ArrayList<>();
 		for (Entity ent : this.entities) {
-			if (ent.getType().isMovable()) {
+			if (((EntityType) ent.getType()).isMovable()) {
 				ents.add(ent);
 			}
 		}
@@ -229,8 +208,14 @@ public class Field extends HasAction {
 	}
 
 	@Override
+	public TileType getType() {
+		return (TileType) super.getType();
+	}
+
+	@Override
 	public String toString() {
-		return "Field [type=" + type + ", coords=" + position.getPosition() + ", visible=" + visible + ", selected=" + selected
+		return "Field [type=" + this.getType() + ", coords=" + position.getPosition() + ", visible=" + visible
+		    + ", selected=" + selected
 				+ ", entities=" + entities + ", props=" + props + "]";
 	}
 

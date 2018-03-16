@@ -4,10 +4,10 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
+import cz.macgregor.eden.core.logic.actions.Identifier;
 import cz.macgregor.eden.core.logic.patterns.Pattern;
 import cz.macgregor.eden.core.logic.tiles.Field;
 import cz.macgregor.eden.core.logic.tiles.FieldInfo;
-import cz.macgregor.eden.core.logic.tiles.TileFactory;
 import cz.macgregor.eden.core.logic.tiles.TileType;
 import cz.macgregor.eden.util.Const;
 import cz.macgregor.eden.util.Utils;
@@ -92,14 +92,14 @@ public class MapGenerator {
 
 		for (Point pt : pointsToFill) {
 			if (map.get(pt).getField() == null) {
-				map.put(pt, field != null ? TileFactory.newField(field.getType()) : newField(pt));
+				map.put(pt, field != null ? MapObjectFactory.createField(field.getType()) : newField(pt));
 			}
 		}
 	}
 
 	private Field newField(Point pointToSearch) {
 
-		List<TileType> candidates = new ArrayList<>();
+		List<Identifier<Field>> candidates = new ArrayList<>();
 
 		List<FieldInfo> neighbours = map.getNeighbours(pointToSearch, GameMap.WITH_ORIGIN);
 		for (FieldInfo fld : neighbours) {
@@ -118,7 +118,7 @@ public class MapGenerator {
 			}
 		}
 
-		return TileFactory.newField(candidates.get(Utils.randomInt(0, candidates.size())));
+		return MapObjectFactory.createField(candidates.get(Utils.randomInt(0, candidates.size())));
 	}
 
 }

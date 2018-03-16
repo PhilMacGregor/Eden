@@ -1,12 +1,17 @@
 package cz.macgregor.eden.core.logic.actions;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import cz.macgregor.eden.core.logic.entities.Entity;
+import cz.macgregor.eden.core.logic.entities.EntityType;
+import cz.macgregor.eden.core.logic.entities.Subscriber;
+import cz.macgregor.eden.core.logic.tiles.TileType;
 import cz.macgregor.eden.util.filecrawler.FileCrawler;
 import cz.macgregor.eden.util.filecrawler.ResourceEntry;
 
@@ -15,6 +20,8 @@ public class ActionHolder {
 
 	private final Map<TriggerType, List<ActionEntry>> entriesByTrigger;
 
+	private final Map<Identifier<? extends HasAction>, ActionEntry[]> defaultActions;
+
 	public static ActionHolder getInstance() {
 		return InstanceHolder.INSTANCE.instance;
 	}
@@ -22,7 +29,15 @@ public class ActionHolder {
 	private ActionHolder() {
 		this.entries = new HashMap<>();
 		this.entriesByTrigger = new HashMap<>();
+		this.defaultActions = new HashMap<>();
 
+		initEntriesByTrigger();
+		initDefaultActions(TileType.class);
+		initDefaultActions(EntityType.class);
+
+	}
+
+	private void initEntriesByTrigger() {
 		try {
 			Collection<ResourceEntry<?>> resources = FileCrawler.getInstance()
 			    .searchFolder("cz.macgregor.eden.core.logic.actions", ".class");
@@ -42,6 +57,29 @@ public class ActionHolder {
 
 		} catch (IllegalAccessException | InstantiationException e) {
 			throw new RuntimeException("failed to instantiate the action.", e);
+		}
+	}
+
+	private void initDefaultActions(Class<?> clazz) {
+		for (Field fld : clazz.getFields()) {
+			Subscriber subscriberInfo = fld.getAnnotation(Subscriber.class);
+
+			if (Arrays.asList(fld.getType().getInterfaces()).contains(Identifier.class) && subscriberInfo != null) {
+
+				String[] actions = subscriberInfo.value();
+				List<ActionEntry> foundActionEntries = new ArrayList<>();
+				for (String action : actions) {
+					foundActionEntries.add(this.entries.get(action));
+				}
+
+				Identifier<?> identifier;
+				try {
+					identifier = (Identifier<?>) fld.get(null);
+					defaultActions.put(identifier, foundActionEntries.toArray(new ActionEntry[foundActionEntries.size()]));
+				} catch (IllegalArgumentException | IllegalAccessException e) {
+					throw new RuntimeException("failed to initialize EntityFactory.", e);
+				}
+			}
 		}
 	}
 
@@ -92,10 +130,13 @@ public class ActionHolder {
 				if (ent.getActions().contains(holder.action)) {
 					holder.action.doAction(ent);
 				}
-
 			}
-
 		}
+
+	}
+
+	public static ActionEntry[] getDefaultActions(Identifier<?> identifier) {
+		return getInstance().defaultActions.get(identifier);
 	}
 
 	public class ActionEntry {
