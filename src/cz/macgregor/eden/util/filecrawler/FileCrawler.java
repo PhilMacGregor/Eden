@@ -127,12 +127,12 @@ public class FileCrawler {
 	}
 
 	private String getFileExtension(File file) {
-		String fName = file.getName();
-		int extensionStart = fName.lastIndexOf(".");
+		String fname = file.getName();
+		int extensionStart = fname.lastIndexOf(".");
 		if (extensionStart < 0) {
 			return "";
 		}
-		return fName.substring(extensionStart);
+		return fname.substring(extensionStart);
 	}
 
 	private void initExtensions() {

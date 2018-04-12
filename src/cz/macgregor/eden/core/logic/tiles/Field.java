@@ -9,7 +9,6 @@ import cz.macgregor.eden.core.logic.GameMap;
 import cz.macgregor.eden.core.logic.actions.HasAction;
 import cz.macgregor.eden.core.logic.actions.Identifier;
 import cz.macgregor.eden.core.logic.entities.Entity;
-import cz.macgregor.eden.core.logic.entities.EntityType;
 
 /**
  * class representing a single field from the game map.
@@ -18,9 +17,9 @@ import cz.macgregor.eden.core.logic.entities.EntityType;
  *
  */
 public class Field extends HasAction {
-	
+
 	private GameMap parent;
-	
+
 	/**
 	 * is visible (do show this field on the map. Otherwise, show only an
 	 * "invisible" tile.
@@ -35,7 +34,7 @@ public class Field extends HasAction {
 	 * TileType.props.
 	 */
 	private TileProps props;
-	
+
 	/**
 	 * position where the field is located at.
 	 */
@@ -102,13 +101,19 @@ public class Field extends HasAction {
 		ent.setField(this);
 		return this.entities.add(ent);
 	}
-	
+
+	/**
+	 * remove an entity from the field.
+	 * 
+	 * @param ent
+	 *            entity
+	 */
 	public void removeEntity(Entity ent) {
 		if (this.entities.contains(ent)) {
 			ent.setField(null);
 			this.entities.remove(ent);
 		}
-		
+
 	}
 
 	/**
@@ -125,15 +130,20 @@ public class Field extends HasAction {
 		}
 		return this.entities.addAll(ents);
 	}
-	
+
+	/**
+	 * get all entites from the field that can be moved.
+	 * 
+	 * @return movable entities.
+	 */
 	public List<Entity> getMovableEntities() {
 		List<Entity> ents = new ArrayList<>();
 		for (Entity ent : this.entities) {
-			if (((EntityType) ent.getType()).isMovable()) {
+			if (ent.getType().isMovable()) {
 				ents.add(ent);
 			}
 		}
-		
+
 		return ents;
 	}
 
@@ -149,13 +159,16 @@ public class Field extends HasAction {
 	/**
 	 * setter.
 	 * 
-	 * @return should the field be visible
+	 * @param visible
+	 *            should the field be visible
 	 */
 	public void setVisible(boolean visible) {
 		this.visible = visible;
 	}
 
 	/**
+	 * getter.
+	 * 
 	 * @return the selected
 	 */
 	public boolean isSelected() {
@@ -163,6 +176,8 @@ public class Field extends HasAction {
 	}
 
 	/**
+	 * setter.
+	 * 
 	 * @param selected
 	 *            the selected to set
 	 */
@@ -171,6 +186,8 @@ public class Field extends HasAction {
 	}
 
 	/**
+	 * getter.
+	 * 
 	 * @return the props
 	 */
 	public TileProps getProps() {
@@ -178,14 +195,18 @@ public class Field extends HasAction {
 	}
 
 	/**
+	 * setter.
+	 * 
 	 * @param props
 	 *            the props to set
 	 */
 	public void setProps(TileProps props) {
 		this.props = props;
 	}
-	
+
 	/**
+	 * getter.
+	 * 
 	 * @return the position
 	 */
 	public FieldInfo getPosition() {
@@ -193,7 +214,10 @@ public class Field extends HasAction {
 	}
 
 	/**
-	 * @param position the position to set
+	 * setter.
+	 * 
+	 * @param position
+	 *            the position to set
 	 */
 	public void setPosition(FieldInfo position) {
 		this.position = position;
@@ -215,8 +239,7 @@ public class Field extends HasAction {
 	@Override
 	public String toString() {
 		return "Field [type=" + this.getType() + ", coords=" + position.getPosition() + ", visible=" + visible
-		    + ", selected=" + selected
-				+ ", entities=" + entities + ", props=" + props + "]";
+				+ ", selected=" + selected + ", entities=" + entities + ", props=" + props + "]";
 	}
 
 }

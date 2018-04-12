@@ -4,13 +4,23 @@ import java.io.File;
 
 import cz.macgregor.eden.util.filecrawler.resources.FolderResource;
 
+/**
+ * this class resembles a single resolved resource callable by its qualified
+ * name.
+ * 
+ * @author MacGregor
+ *
+ * @param <T>
+ *            type of the resource represented. Fir example: File, Class,
+ *            ImageIcon...
+ */
 public abstract class ResourceEntry<T extends Object> {
 	protected FolderResource parent;
 	private String qualifiedName;
 	private File file;
-	
+
 	public abstract T getResource();
-	
+
 	public FolderResource getParent() {
 		return parent;
 	}
@@ -21,33 +31,43 @@ public abstract class ResourceEntry<T extends Object> {
 	}
 
 	/**
+	 * getter.
+	 * 
 	 * @return the qualifiedName
 	 */
 	public String getQualifiedName() {
 		return qualifiedName;
 	}
-	
+
 	/**
-	 * @param qualifiedName the qualifiedName to set
+	 * setter.
+	 * 
+	 * @param qualifiedName
+	 *            the qualifiedName to set
 	 */
 	public void setQualifiedName(String qualifiedName) {
 		this.qualifiedName = qualifiedName;
 	}
-	
+
 	/**
+	 * getter.
+	 * 
 	 * @return the file
 	 */
 	public File getFile() {
 		return file;
 	}
-	
+
 	/**
-	 * @param file the file to set
+	 * setter.
+	 * 
+	 * @param file
+	 *            the file to set
 	 */
 	public void setFile(File file) {
 		this.file = file;
 	}
-	
+
 	@Override
 	public String toString() {
 		String ret = "Resource entry: ";
@@ -58,8 +78,8 @@ public abstract class ResourceEntry<T extends Object> {
 		} else {
 			ret += qualifiedName;
 		}
-		
+
 		return ret;
 	}
-	
+
 }

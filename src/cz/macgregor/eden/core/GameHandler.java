@@ -36,7 +36,7 @@ public class GameHandler {
 	private GameMap map;
 	/** map generator. */
 	private MapGenerator mapGen;
-	
+
 	private int turnCount;
 
 	/**
@@ -54,14 +54,15 @@ public class GameHandler {
 	 */
 	private void init() {
 		Sprites.getInstance();
-		
+
 		this.map = new GameMap();
 		this.mapGen = new MapGenerator(map);
 
 		Point startPoint = new Point(0, 0);
 
 		map.put(startPoint, MapObjectFactory.createField(TileType.ORIGIN));
-		mapGen.fillPattern(new DiamondPattern(), startPoint, new Point(2, 2), MapObjectFactory.createField(TileType.GRASS));
+		mapGen.fillPattern(new DiamondPattern(), startPoint, new Point(2, 2),
+				MapObjectFactory.createField(TileType.GRASS));
 
 		mapGen.fillPattern(new RectanglePattern(), startPoint, new Point(INITIAL_MAP_SIZE, INITIAL_MAP_SIZE));
 
@@ -69,41 +70,45 @@ public class GameHandler {
 		map.get(-1, 0).getField().addEntity(MapObjectFactory.createEntity(EntityType.EVE));
 		ValueIndicators.POPULATION.update(2);
 
-//		map.get(1, 1).getField().addEntity(EntityFactory.newEntity(EntityType.BUILDING));
-		
-//		addTestEntites();
-		
+		// map.get(1,
+		// 1).getField().addEntity(EntityFactory.newEntity(EntityType.BUILDING));
+
+		// addTestEntites();
+
 		this.turnCount = 0;
-		
+
 		ActionHolder.activateTrigger(TriggerType.GAME_START);
 		graphics.turnAction(turnCount);
 		graphics.paint(map);
 	}
 
+	/**
+	 * add the test entities.
+	 */
 	@SuppressWarnings("unused")
 	private void addTestEntites() {
-		int nrOfEntities = map.getMap().size();
-		
 		List<EntityType> entsToPlace = new ArrayList<>();
-		entsToPlace.add(EntityType.DEBUG_NW);
 		entsToPlace.add(EntityType.ADAM);
 		entsToPlace.add(EntityType.EVE);
-		entsToPlace.add(EntityType.SETH);
 		entsToPlace.add(EntityType.BUILDING);
- 
+
+		int nrOfEntities = map.getMap().size();
+
 		System.out.printf("Generating %d entities.\n", nrOfEntities);
 
 		FieldInfo[] fldInfos = map.getMap().values().toArray(new FieldInfo[map.getMap().values().size()]);
-		
+
 		while (nrOfEntities > 0) {
 			Field fieldToPopulate = fldInfos[Utils.randomInt(0, fldInfos.length - 1)].getField();
-			
+
 			if (fieldToPopulate != null && fieldToPopulate.getType().getDefaultProps().isCanBuild()) {
-				fieldToPopulate.addEntity(MapObjectFactory.createEntity(entsToPlace.get(Utils.randomInt(0, entsToPlace.size()))));
-				
+				fieldToPopulate.addEntity(
+						MapObjectFactory.createEntity(entsToPlace.get(Utils.randomInt(0, entsToPlace.size()))));
+
 				nrOfEntities--;
-				
-				System.out.printf("Adding entity to: %d; %d. %d entities remaining to add.\n", fieldToPopulate.getCoords().x, fieldToPopulate.getCoords().y, nrOfEntities);
+
+				System.out.printf("Adding entity to: %d; %d. %d entities remaining to add.\n",
+						fieldToPopulate.getCoords().x, fieldToPopulate.getCoords().y, nrOfEntities);
 			}
 		}
 	}
@@ -148,18 +153,18 @@ public class GameHandler {
 	public GameMap getMap() {
 		return map;
 	}
-	
+
 	/**
 	 * Do action for the new turn.
 	 */
 	public void newTurn() {
 		ActionHolder.activateTrigger(TriggerType.TURN_START);
-		
+
 		graphics.turnAction(turnCount);
 		graphics.paint(map);
-		
+
 		ActionHolder.activateTrigger(TriggerType.TURN_END);
-		
+
 		turnCount++;
 	}
 

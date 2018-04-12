@@ -6,14 +6,14 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 public class TopPanel extends JPanel {
-	private static final long	serialVersionUID	= 1L;
+	private static final long serialVersionUID = 1L;
 
 	private final JTextField infoTextField;
 
 	public TopPanel() {
 		super();
 		this.infoTextField = new JTextField();
-		infoTextField.setText("tady budou suroviny a dal≈°√≠ u≈æiteƒçn√© blbosti");
+		infoTextField.setText("tady budou suroviny a dalöÌ uûiteËnÈ blbosti");
 		infoTextField.setEditable(false);
 		infoTextField.setPreferredSize(new Dimension(600, 40));
 		this.add(infoTextField);

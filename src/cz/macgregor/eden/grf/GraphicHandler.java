@@ -36,33 +36,33 @@ public class GraphicHandler {
 	/** JLabel where the game map will be displayed. */
 	private final CanvasLabel canvasLabel;
 	/** bottom panel with context information. */
-	private final BottomPanel	bottomPanel;
+	private final BottomPanel bottomPanel;
 	/** top panel with context information. */
-	private final TopPanel		topPanel;
+	private final TopPanel topPanel;
 	/** focus point for the canvas label. */
 	private Point focusPoint;
 	/** application window. */
-	private final JFrame			frame;
+	private final JFrame frame;
 	/** debug mode. */
-	private boolean						debugMode;
-	
+	private boolean debugMode;
+
 	private Map<Direction, EntityDrawer> positionDrawers;
 
 	/**
 	 * constructor. Creates the window with appropriate component. Its size will
-	 * be computed from canvasWidth * width of a single map field and canvasHeight
-	 * * height of a single field.
+	 * be computed from canvasWidth * width of a single map field and
+	 * canvasHeight * height of a single field.
 	 * 
 	 * @param canvasWidth
-	 *          canvas width in the number of displayed fields in a map
+	 *            canvas width in the number of displayed fields in a map
 	 * @param canvasHeight
-	 *          canvas height in the number of displayed fields in a map
+	 *            canvas height in the number of displayed fields in a map
 	 * @param gameHandler
-	 *          game handler
+	 *            game handler
 	 */
 	public GraphicHandler(int canvasWidth, int canvasHeight, GameHandler gameHandler) {
 		initEntityDrawers();
-		
+
 		this.setDebugMode(Const.SCREEN_DEBUG);
 
 		this.frame = new JFrame(Const.APP_NAME);
@@ -73,18 +73,18 @@ public class GraphicHandler {
 		canvasLabel.setPreferredSize(canvasSize);
 		canvasLabel.addKeyListener(new CanvasKeyListener(gameHandler));
 		canvasLabel.setFocusable(true);
-		
+
 		this.bottomPanel = new BottomPanel();
 		this.topPanel = new TopPanel();
 
 		this.focusPoint = new Point(0, 0);
-		
+
 		frame.add(canvasLabel, BorderLayout.CENTER);
 		frame.add(topPanel, BorderLayout.NORTH);
 		frame.add(bottomPanel, BorderLayout.SOUTH);
 		frame.pack();
 		frame.setResizable(false);
-		
+
 		canvasLabel.requestFocus();
 
 		Utils.moveToCenter(frame);
@@ -103,13 +103,15 @@ public class GraphicHandler {
 	 * set map focus point.
 	 * 
 	 * @param focusPoint
-	 *          focus point
+	 *            focus point
 	 */
 	public void setFocusPoint(Point focusPoint) {
 		this.focusPoint = focusPoint;
 	}
 
 	/**
+	 * getter.
+	 * 
 	 * @return the debugMode
 	 */
 	public boolean isDebugMode() {
@@ -117,8 +119,10 @@ public class GraphicHandler {
 	}
 
 	/**
+	 * setter.
+	 * 
 	 * @param debugMode
-	 *          the debugMode to set
+	 *            the debugMode to set
 	 */
 	public void setDebugMode(boolean debugMode) {
 		this.debugMode = debugMode;
@@ -135,27 +139,22 @@ public class GraphicHandler {
 	 * repaint the canvas label to show a given map from the set focus point.
 	 * 
 	 * @param map
-	 *          map to show
+	 *            map to show
 	 */
 	public void paint(GameMap map) {
 		canvasLabel.repaint(map, focusPoint, debugMode);
 	}
-	
+
+	/**
+	 * Initialize entity drawers. For each entity that could be drawed, there is
+	 * a need to set its layer (ground to clouds) and position to be drawed at
+	 * relative to the field it occupies.
+	 */
 	private void initEntityDrawers() {
-		DrawTarget.LAYER_CLOUDS.addEntity(EntityType.DEBUG_CENTER, Direction.CENTER);
 		DrawTarget.LAYER_CLOUDS.addEntity(EntityType.DWELLER_COUNT, Direction.NW);
-		DrawTarget.LAYER_CLOUDS.addEntity(EntityType.DEBUG_NW, Direction.NW);
-		DrawTarget.LAYER_CLOUDS.addEntity(EntityType.DEBUG_SW, Direction.SW);
-		DrawTarget.LAYER_CLOUDS.addEntity(EntityType.DEBUG_SE, Direction.SE);
-		DrawTarget.LAYER_CLOUDS.addEntity(EntityType.DEBUG_NE, Direction.NE);
-		DrawTarget.LAYER_CLOUDS.addEntity(EntityType.DEBUG_N, Direction.N);
-		DrawTarget.LAYER_CLOUDS.addEntity(EntityType.DEBUG_S, Direction.S);
-		DrawTarget.LAYER_CLOUDS.addEntity(EntityType.DEBUG_E, Direction.E);
-		DrawTarget.LAYER_CLOUDS.addEntity(EntityType.DEBUG_W, Direction.W);
 
 		DrawTarget.LAYER_GROUND.addEntity(EntityType.ADAM, Direction.RANDOM);
 		DrawTarget.LAYER_GROUND.addEntity(EntityType.EVE, Direction.RANDOM);
-		DrawTarget.LAYER_GROUND.addEntity(EntityType.SETH, Direction.RANDOM);
 
 		DrawTarget.LAYER_GROUND.addEntity(EntityType.BUILDING, Direction.RANDOM);
 
@@ -173,7 +172,13 @@ public class GraphicHandler {
 		positionDrawers.put(Direction.RANDOM, new RandomDrawer());
 
 	}
-	
+
+	/**
+	 * This method is called at the beginning of each turn.
+	 * 
+	 * @param turnCount
+	 *            turns elapsed since the game start
+	 */
 	public void turnAction(int turnCount) {
 		bottomPanel.showInfo("DEBUG: kolo " + turnCount + ".");
 	}

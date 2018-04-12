@@ -17,15 +17,15 @@ import cz.macgregor.eden.util.Utils;
  * @author MacGregor
  */
 public enum TileType implements Identifier<Field> {
-  // name, image, is water, can build on, fertility, wood, stone, ore, danger
+	// name, image, is water, can build on, fertility, wood, stone, ore, danger
 
 	/** tile type to hold an image for unknown tiles. */
 	UNKNOWN("unexplored", "img.tile.unknown.png", null, false),
 	/** tile type to hold an image for tiles that are not visible. */
 	INVISIBLE("invisible", "img.tile.invisible.png", null, false),
 	/**
-	 * The holy tree. This tile is only generated at 0;0. It cannot be used by map
-	 * generator.
+	 * The holy tree. This tile is only generated at 0;0. It cannot be used by
+	 * map generator.
 	 */
 	ORIGIN("The Origin", "img.tile.holyTree.png", new TileProps().withWater(false).withCanBuild(false).withFertility(0).withWood(0).withStone(0).withOre(0).withDanger(0), false),
 	/** forest. */
@@ -44,24 +44,24 @@ public enum TileType implements Identifier<Field> {
 	WATER("water", "img.tile.water.png", new TileProps().withWater(true).withCanBuild(false).withFertility(0).withWood(0).withStone(0).withOre(0).withDanger(0), true);
 
 	/** tile name. */
-	private final String		name;
+	private final String name;
 	/** tile image. */
-	private final String		image;
+	private final String image;
 	/** default properties for the tile type. */
-	private final TileProps	defaultProps;
+	private final TileProps defaultProps;
 
 	/**
 	 * constructor.
 	 * 
 	 * @param name
-	 *          name
+	 *            name
 	 * @param imgPath
-	 *          path to image
+	 *            path to image
 	 * @param props
-	 *          properties
+	 *            properties
 	 * @param usedInGenerator
-	 *          if false, this tile type is not used in random generation by map
-	 *          generator
+	 *            if false, this tile type is not used in random generation by
+	 *            map generator
 	 */
 	private TileType(String name, String imgPath, TileProps props, boolean usedInGenerator) {
 		this.name = name;
@@ -80,13 +80,15 @@ public enum TileType implements Identifier<Field> {
 	 * initialisation errors.
 	 * 
 	 * @param type
-	 *          type
+	 *            type
 	 */
 	private void addToUsableTiles(TileType type) {
 		UsableListHolder.getInstance().add(type);
 	}
 
 	/**
+	 * getter.
+	 * 
 	 * @return name
 	 */
 	public String getName() {
@@ -94,6 +96,8 @@ public enum TileType implements Identifier<Field> {
 	}
 
 	/**
+	 * getter.
+	 * 
 	 * @return image
 	 */
 	public ImageIcon getIcon() {
@@ -120,6 +124,8 @@ public enum TileType implements Identifier<Field> {
 	}
 
 	/**
+	 * getter.
+	 * 
 	 * @return default properties
 	 */
 	public TileProps getDefaultProps() {
@@ -127,8 +133,8 @@ public enum TileType implements Identifier<Field> {
 	}
 
 	/**
-	 * class to hold an instance of the List to store TileType instances used for
-	 * random generation.
+	 * class to hold an instance of the List to store TileType instances used
+	 * for random generation.
 	 * 
 	 * @author MacGregor
 	 *
@@ -138,6 +144,8 @@ public enum TileType implements Identifier<Field> {
 		private static List<TileType> instance;
 
 		/**
+		 * get instance.
+		 * 
 		 * @return instance
 		 */
 		private static List<TileType> getInstance() {

@@ -40,7 +40,7 @@ public class ActionHolder {
 	private void initEntriesByTrigger() {
 		try {
 			Collection<ResourceEntry<?>> resources = FileCrawler.getInstance()
-			    .searchFolder("cz.macgregor.eden.core.logic.actions", ".class");
+					.searchFolder("cz.macgregor.eden.core.logic.actions", ".class");
 			for (ResourceEntry<?> res : resources) {
 				Class<?> clazz = (Class<?>) res.getResource();
 				ActionInfo actionInfo = clazz.getAnnotation(ActionInfo.class);
@@ -75,7 +75,8 @@ public class ActionHolder {
 				Identifier<?> identifier;
 				try {
 					identifier = (Identifier<?>) fld.get(null);
-					defaultActions.put(identifier, foundActionEntries.toArray(new ActionEntry[foundActionEntries.size()]));
+					defaultActions.put(identifier,
+							foundActionEntries.toArray(new ActionEntry[foundActionEntries.size()]));
 				} catch (IllegalArgumentException | IllegalAccessException e) {
 					throw new RuntimeException("failed to initialize EntityFactory.", e);
 				}
@@ -140,9 +141,9 @@ public class ActionHolder {
 	}
 
 	public class ActionEntry {
-		private final Action<HasAction>	action;
-		private final TriggerType				trigger;
-		private final List<HasAction>		subscribers;
+		private final Action<HasAction> action;
+		private final TriggerType trigger;
+		private final List<HasAction> subscribers;
 
 		private ActionEntry(TriggerType trigger, Action<HasAction> action) {
 			this.trigger = trigger;
@@ -159,6 +160,7 @@ public class ActionHolder {
 		}
 
 		/**
+		 * getter.
 		 * @return the action
 		 */
 		public Action<HasAction> getAction() {

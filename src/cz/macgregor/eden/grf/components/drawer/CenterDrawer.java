@@ -8,7 +8,9 @@ import javax.swing.ImageIcon;
 import cz.macgregor.eden.core.logic.entities.Entity;
 
 public class CenterDrawer implements EntityDrawer {
-	private final int offsetX, offsetY, step;
+	private final int offsetX;
+	private final int offsetY;
+	private final int step;
 
 	public CenterDrawer(int beginOffsetX, int beginOffsetY, int offsetAdd) {
 		this.offsetX = beginOffsetX;
