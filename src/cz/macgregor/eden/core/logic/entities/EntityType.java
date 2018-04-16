@@ -17,23 +17,34 @@ import cz.macgregor.eden.core.logic.actions.Identifier;
  */
 public enum EntityType implements Identifier<Entity> {
 
+	/** building. where people are born. */
 	@Subscriber({ "birth" })
 	BUILDING("building", "img.ent.building.hut.png"),
-
+	/**
+	 * entity to display number of dwellers that have been born in the building.
+	 */
 	DWELLER_COUNT("NW", "img.ent.debug.ne.png"),
-
+	/**
+	 * Adam - male. Has the explore and random move action, but unlike Eve, he
+	 * holds the procreate action too.
+	 */
 	@Subscriber({ "explore", "randomMove", "procreate" })
 	ADAM("Adam", "img.ent.mob.adam.png", true),
-
+	/**
+	 * Eve - female. Has the explore and random move action.
+	 */
 	@Subscriber({ "explore", "randomMove" })
 	EVE("Eve", "img.ent.mob.eve.png", true),
-
+	/** tree, randomly generated in forest or by growForest action. */
 	PINETREE("pineTree", "img.ent.nature.pinetree.png"),
-
+	/** mountain, randomly generated on mountains field. */
 	MOUNTAIN("mountain", "img.ent.nature.mountain.png");
 
+	/** entity name. */
 	private final String name;
+	/** entity path to the entity image. */
 	private final String image;
+	/** can entity be moved. */
 	private final boolean movable;
 
 	/**

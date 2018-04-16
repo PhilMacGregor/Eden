@@ -2,25 +2,37 @@ package cz.macgregor.eden.core.logic;
 
 import java.awt.Point;
 
+/**
+ * enum holding the vector for the four directions. used for field selection
+ * from the map.
+ * 
+ * @author MacGregor
+ *
+ */
 public enum Direction {
 	/** origin point where am I looking up. */
-	ORIGIN(new Point(0, 0), 0), 
+	ORIGIN(new Point(0, 0), 0),
 	/** north from origin. */
-	NORTH(new Point(0, 1), 1), 
+	NORTH(new Point(0, 1), 1),
 	/** east from origin. */
-	EAST(new Point(1, 0), 2), 
+	EAST(new Point(1, 0), 2),
 	/** south from origin. */
-	SOUTH(new Point(0, -1), 3), 
+	SOUTH(new Point(0, -1), 3),
 	/** west from origin. */
 	WEST(new Point(-1, 0), 4);
 
-	private final Point	direction;
-	private final int		index;
+	/** direction vector. */
+	private final Point direction;
+	/** index in direction list. */
+	private final int index;
 
 	/**
 	 * constructor.
-	 * @param direction direction vector
-	 * @param index index in direction list
+	 * 
+	 * @param direction
+	 *            direction vector
+	 * @param index
+	 *            index in direction list
 	 */
 	private Direction(Point direction, int index) {
 		this.direction = direction;
@@ -29,6 +41,7 @@ public enum Direction {
 
 	/**
 	 * return a point resembling the vector of the direction.
+	 * 
 	 * @return the direction
 	 */
 	public Point dir() {
@@ -37,6 +50,7 @@ public enum Direction {
 
 	/**
 	 * return the index in the direction list.
+	 * 
 	 * @return the index
 	 */
 	public int index() {
@@ -45,7 +59,9 @@ public enum Direction {
 
 	/**
 	 * find the direction by index.
-	 * @param index index
+	 * 
+	 * @param index
+	 *            index
 	 * @return direction
 	 */
 	public static Direction findByIndex(int index) {
@@ -55,7 +71,7 @@ public enum Direction {
 			}
 		}
 		return null;
-		
+
 	}
 
 }

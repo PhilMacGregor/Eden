@@ -28,6 +28,10 @@ import cz.macgregor.eden.util.Utils;
  *
  */
 public class GameHandler {
+	/**
+	 * max distance from the Origin for the map to be created at the beginning
+	 * of the game.
+	 */
 	private static final int INITIAL_MAP_SIZE = 5;
 
 	/** game graphics handler. */
@@ -37,6 +41,7 @@ public class GameHandler {
 	/** map generator. */
 	private MapGenerator mapGen;
 
+	/** turns already elapsed since the game start. */
 	private int turnCount;
 
 	/**

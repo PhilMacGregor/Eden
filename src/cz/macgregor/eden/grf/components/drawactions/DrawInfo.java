@@ -8,13 +8,15 @@ import cz.macgregor.eden.core.logic.tiles.Field;
 import cz.macgregor.eden.util.Const;
 
 /**
- * he entity drawer used to draw the indformation about the field.
+ * he entity drawer used to draw the information about the field. Also draw a
+ * red highlight if the field is selected.
  * 
  * @author MacGregor
  *
  */
 public class DrawInfo implements DrawAction {
 
+	/** draw debug info. */
 	private boolean debug;
 
 	/**

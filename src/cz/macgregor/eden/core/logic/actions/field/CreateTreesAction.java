@@ -7,10 +7,19 @@ import cz.macgregor.eden.core.logic.entities.EntityWithPosition;
 import cz.macgregor.eden.core.logic.tiles.Field;
 import cz.macgregor.eden.util.Utils;
 
+/**
+ * Action called on creating a forest field, adding a random amounts if trees to
+ * it.
+ * 
+ * @author MacGregor
+ *
+ */
 @ActionInfo(name = "createTrees", trigger = TriggerType.CREATE)
 public class CreateTreesAction implements FieldAction {
-	private static final int	STARTING_TREES_MIN	= 3;
-	private static final int	STARTING_TREES_MAX	= 50;
+	/** minimum amount to be created. */
+	private static final int STARTING_TREES_MIN = 3;
+	/** maximum amount to be created. */
+	private static final int STARTING_TREES_MAX = 50;
 
 	@Override
 	public void doAction(Field fld) {

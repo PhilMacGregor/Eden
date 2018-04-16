@@ -2,6 +2,12 @@ package cz.macgregor.eden.util.filecrawler.resources;
 
 import cz.macgregor.eden.util.filecrawler.ResourceEntry;
 
+/**
+ * A resource holding a class.
+ * 
+ * @author MacGregor
+ *
+ */
 public class ClassResource extends ResourceEntry<Class<?>> {
 
 	@Override

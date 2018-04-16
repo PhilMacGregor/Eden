@@ -8,24 +8,35 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import cz.macgregor.eden.core.logic.entities.Entity;
 import cz.macgregor.eden.core.logic.entities.EntityType;
 import cz.macgregor.eden.core.logic.entities.Subscriber;
 import cz.macgregor.eden.core.logic.tiles.TileType;
 import cz.macgregor.eden.util.filecrawler.FileCrawler;
 import cz.macgregor.eden.util.filecrawler.ResourceEntry;
 
+/**
+ * this class holds a list of all action used by fields and entites by trigger
+ * type. Can trigger specific actions both for one HasAction or for all of them
+ * subscribed to the action.
+ * 
+ * @author MacGregor
+ *
+ */
 public class ActionHolder {
+	/** map of the action entries by name. */
 	private final Map<String, ActionEntry> entries;
-
+	/** map of the actions for each trigger. */
 	private final Map<TriggerType, List<ActionEntry>> entriesByTrigger;
-
+	/** default actions for each HasAction. */
 	private final Map<Identifier<? extends HasAction>, ActionEntry[]> defaultActions;
 
 	public static ActionHolder getInstance() {
 		return InstanceHolder.INSTANCE.instance;
 	}
 
+	/**
+	 * constructor.
+	 */
 	private ActionHolder() {
 		this.entries = new HashMap<>();
 		this.entriesByTrigger = new HashMap<>();
@@ -37,6 +48,24 @@ public class ActionHolder {
 
 	}
 
+	/**
+	 * initialisation method to map the all actions and create the action
+	 * entries based on their trigger. <br>
+	 * <br>
+	 * <ol>
+	 * <li>Crawls the package where the actions to be mapped are expected using
+	 * the FileCrawler.</li>
+	 * <li>For each class annotated with ActionInfo, create a new ActionEntry,
+	 * containing the trigger from the annotation and a new instance of the
+	 * class.</li>
+	 * <li>Also, put the action in the Entries map with a name from the
+	 * annotation.</li>
+	 * </ol>
+	 * The ActionInfo annotation must be only used with the Action class. The
+	 * type of the mapped class is currently unchecked and the illegal type will
+	 * result in failure of the application on startup.
+	 * 
+	 */
 	private void initEntriesByTrigger() {
 		try {
 			Collection<ResourceEntry<?>> resources = FileCrawler.getInstance()
@@ -60,6 +89,22 @@ public class ActionHolder {
 		}
 	}
 
+	/**
+	 * Method that check a given enum (probably works with standard classes too,
+	 * but this is not checked) and maps its instances to the map with their
+	 * default actions. The class must implement an Identifier interface.<br>
+	 * <br>
+	 * <ol>
+	 * <li>for each field of the class, check if it's annotated with
+	 * Subscriber.</li>
+	 * <li>for all actions from the Subscriber annotation, put an item to the
+	 * defaultActions with the field as the key and the actions array as the
+	 * value.</li>
+	 * </ol>
+	 * 
+	 * @param clazz
+	 *            class to be mapped
+	 */
 	private void initDefaultActions(Class<?> clazz) {
 		for (Field fld : clazz.getFields()) {
 			Subscriber subscriberInfo = fld.getAnnotation(Subscriber.class);
@@ -84,6 +129,13 @@ public class ActionHolder {
 		}
 	}
 
+	/**
+	 * find an action entry by given name.
+	 * 
+	 * @param name
+	 *            action name
+	 * @return action entry
+	 */
 	public static ActionEntry byName(String name) {
 		return getInstance().entries.get(name);
 	}
@@ -98,6 +150,13 @@ public class ActionHolder {
 
 	}
 
+	/**
+	 * convenience method, just actionsByTrigger called on getInstance().
+	 * 
+	 * @param trig
+	 *            trigger
+	 * @return actions for that trigger
+	 */
 	public List<ActionEntry> getActionsByTrigger(TriggerType trig) {
 		Map<TriggerType, List<ActionEntry>> entryMap = this.entriesByTrigger;
 		List<ActionEntry> entriesByTrigger = entryMap.get(trig);
@@ -110,10 +169,24 @@ public class ActionHolder {
 		return entriesByTrigger;
 	}
 
+	/**
+	 * get a list of all actions for a trigger type.
+	 * 
+	 * @param trig
+	 *            trigger
+	 * @return list of all actions for that trigger
+	 */
 	public static List<ActionEntry> actionsByTrigger(TriggerType trig) {
 		return getInstance().getActionsByTrigger(trig);
 	}
 
+	/**
+	 * execute every action for a given trigger on all subscribed HasAction
+	 * items.
+	 * 
+	 * @param trig
+	 *            trigger
+	 */
 	public static synchronized void activateTrigger(TriggerType trig) {
 		for (ActionEntry holder : actionsByTrigger(trig)) {
 
@@ -124,6 +197,15 @@ public class ActionHolder {
 		}
 	}
 
+	/**
+	 * execute every action for a given trigger only on given HasAction items.
+	 * If the items do not have any action, ignore them.
+	 * 
+	 * @param trig
+	 *            trigger
+	 * @param ents
+	 *            items to trigger
+	 */
 	public static void activateTrigger(TriggerType trig, HasAction... ents) {
 		for (ActionEntry holder : actionsByTrigger(trig)) {
 
@@ -140,27 +222,58 @@ public class ActionHolder {
 		return getInstance().defaultActions.get(identifier);
 	}
 
+	/**
+	 * class for a list item holding a single action, a trigger and a list of
+	 * subscriber items.
+	 * 
+	 * @author MacGregor
+	 *
+	 */
 	public class ActionEntry {
+		/** action held. */
 		private final Action<HasAction> action;
+		/** trigger. */
 		private final TriggerType trigger;
+		/** subscribed HasAction items. */
 		private final List<HasAction> subscribers;
 
+		/**
+		 * constructor.
+		 * 
+		 * @param trigger
+		 *            trigger
+		 * @param action
+		 *            action
+		 */
 		private ActionEntry(TriggerType trigger, Action<HasAction> action) {
 			this.trigger = trigger;
 			this.action = action;
 			this.subscribers = new ArrayList<>();
 		}
 
+		/**
+		 * add a subscriber.
+		 * 
+		 * @param ent
+		 *            HasAction item
+		 */
 		public void addSubscriber(HasAction ent) {
 			subscribers.add(ent);
 		}
 
-		public void removeSubscriber(Entity ent) {
+		/**
+		 * remove a subscriber.
+		 * 
+		 * @param ent
+		 *            HasAction item
+		 */
+		public void removeSubscriber(HasAction ent) {
 			subscribers.remove(ent);
 		}
 
 		/**
 		 * getter.
+		 * 
 		 * @return the action
 		 */
 		public Action<HasAction> getAction() {
@@ -174,11 +287,22 @@ public class ActionHolder {
 
 	}
 
+	/**
+	 * instance holder for the ActonHolder.
+	 * 
+	 * @author MacGregor
+	 *
+	 */
 	private enum InstanceHolder {
+		/** the ActionHolder instance. */
 		INSTANCE;
 
+		/** the instance. */
 		private ActionHolder instance;
 
+		/**
+		 * constructor.
+		 */
 		private InstanceHolder() {
 			this.instance = new ActionHolder();
 		}

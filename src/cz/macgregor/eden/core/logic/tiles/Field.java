@@ -18,6 +18,7 @@ import cz.macgregor.eden.core.logic.entities.Entity;
  */
 public class Field extends HasAction {
 
+	/** map the field belongs to. */
 	private GameMap parent;
 
 	/**

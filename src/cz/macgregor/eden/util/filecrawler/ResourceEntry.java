@@ -15,8 +15,11 @@ import cz.macgregor.eden.util.filecrawler.resources.FolderResource;
  *            ImageIcon...
  */
 public abstract class ResourceEntry<T extends Object> {
+	/** parent folder. */
 	protected FolderResource parent;
+	/** qualified name. */
 	private String qualifiedName;
+	/** file mapped. */
 	private File file;
 
 	public abstract T getResource();

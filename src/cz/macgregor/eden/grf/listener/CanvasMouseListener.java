@@ -11,11 +11,22 @@ import cz.macgregor.eden.core.logic.tiles.Field;
 import cz.macgregor.eden.grf.components.canvas.CanvasLabel;
 import cz.macgregor.eden.util.Const;
 
+/**
+ * mouse listener for the canvas. Can select a field and execute a specific
+ * action on it.
+ */
 public class CanvasMouseListener implements MouseListener {
+	/** canvas to be used. */
 	private CanvasLabel label;
-
+	/** field selected. */
 	private Field selectedField;
 
+	/**
+	 * constructor.
+	 * 
+	 * @param parent
+	 *            parent label
+	 */
 	public CanvasMouseListener(CanvasLabel parent) {
 		this.label = parent;
 	}
@@ -48,6 +59,12 @@ public class CanvasMouseListener implements MouseListener {
 		// do nothing
 	}
 
+	/**
+	 * select field that has been clicked on.
+	 * 
+	 * @param e
+	 *            mouse event
+	 */
 	private void selectFieldAction(MouseEvent e) {
 		int x = e.getX();
 		int y = e.getY();
@@ -80,6 +97,15 @@ public class CanvasMouseListener implements MouseListener {
 		label.repaint();
 	}
 
+	/**
+	 * find a field by given coordinates from the label.
+	 * 
+	 * @param x
+	 *            x
+	 * @param y
+	 *            y
+	 * @return field
+	 */
 	private Field findFieldByCoords(int x, int y) {
 		Point focusPoint = label.getFocusPoint();
 		Point canvasSize = label.getCanvasSize();

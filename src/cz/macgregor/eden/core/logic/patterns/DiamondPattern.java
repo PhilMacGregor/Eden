@@ -4,6 +4,12 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * pattern selecting a diamond-shaped list of fields.
+ * 
+ * @author MacGregor
+ *
+ */
 public class DiamondPattern extends Pattern {
 
 	@Override

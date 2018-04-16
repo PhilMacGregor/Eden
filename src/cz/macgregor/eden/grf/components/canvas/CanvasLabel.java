@@ -47,8 +47,13 @@ public class CanvasLabel extends JLabel {
 	/** canvas size in a count of map fields. */
 	private final Point canvasSize;
 
+	/**
+	 * list of draw actions to be used. Each DrawAction represents a single
+	 * layer to be drawn.
+	 */
 	private List<DrawAction> drawActions;
 
+	/** draw action to display debug info. */
 	private DrawInfo drawInfoAction;
 
 	/**
@@ -127,15 +132,30 @@ public class CanvasLabel extends JLabel {
 		Point from = new Point(fromX, fromY);
 		Point to = new Point(toX, toY);
 
+		List<FieldInfo> fields = map.getFieldsByPattern(new StandardPattern(), from, to);
+
 		for (DrawAction action : drawActions) {
-			paintMap(g, from, to, action);
+			paintMap(g, from, to, fields, action);
 		}
 
 	}
 
-	private void paintMap(Graphics g, Point from, Point to, DrawAction action) {
-
-		List<FieldInfo> fields = map.getFieldsByPattern(new StandardPattern(), from, to);
+	/**
+	 * method to paint the map, call once for every draw action from the
+	 * drawActions.
+	 * 
+	 * @param g
+	 *            graphics
+	 * @param from
+	 *            from point for the map
+	 * @param to
+	 *            to point from the map
+	 * @param fields
+	 *            fields to be drawn
+	 * @param action
+	 *            used draw action
+	 */
+	private void paintMap(Graphics g, Point from, Point to, List<FieldInfo> fields, DrawAction action) {
 
 		for (FieldInfo fld : fields) {
 			Point index = fld.getPosition();

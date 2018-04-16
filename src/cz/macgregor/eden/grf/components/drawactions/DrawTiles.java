@@ -7,6 +7,12 @@ import java.awt.Point;
 import cz.macgregor.eden.core.logic.tiles.Field;
 import cz.macgregor.eden.core.logic.tiles.TileType;
 
+/**
+ * draw action used to draw ground of the field.
+ * 
+ * @author MacGregor
+ *
+ */
 public class DrawTiles implements DrawAction {
 
 	@Override

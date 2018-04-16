@@ -12,10 +12,20 @@ import cz.macgregor.eden.util.Utils;
  *
  */
 public class EntityWithPosition extends Entity {
+	/**
+	 * top offset for the entities. No entities will be displayed higher than
+	 * this.
+	 */
 	private static final int Y_OFFSET_TOP = -15;
+	/**
+	 * bottom offset for the entities. No entities will be displayed lower than
+	 * this.
+	 */
 	private static final int Y_OFFSET_BOTTOM = 0;
 
+	/** x position of the entity relative to the field. */
 	private int coordsX;
+	/** y position of the entity relative to the field. */
 	private int coordsY;
 
 	/**

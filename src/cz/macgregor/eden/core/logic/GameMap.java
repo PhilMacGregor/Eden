@@ -15,25 +15,36 @@ import cz.macgregor.eden.core.logic.tiles.Field;
 import cz.macgregor.eden.core.logic.tiles.FieldInfo;
 import cz.macgregor.eden.grf.components.top.ValueIndicators;
 
+/**
+ * the game map.
+ * 
+ * @author MacGregor
+ *
+ */
 public class GameMap {
+	/** constant for getting neighbor field with or without the origin point. */
 	public static final boolean WITH_ORIGIN = true;
-	public static final boolean	WITHOUT_ORIGIN	= false;
-	
-	public static final int	PATTERN_RECTANGLE	= 0;
-	public static final int	PATTERN_DIAMOND	= 1;
-	
-	private MapGenerator mapGenerator;
+	/** constant for getting neighbor field with or without the origin point. */
+	public static final boolean WITHOUT_ORIGIN = false;
 
+	/** constant for the use of rectangle pattern. */
+	public static final int PATTERN_RECTANGLE = 0;
+	/** constant for the use of diamond pattern. */
+	public static final int PATTERN_DIAMOND = 1;
+
+	/** map generator. */
+	private MapGenerator mapGenerator;
+	/** the actual map. Contains the field placeholders mapped to the points. */
 	private final Map<Point, FieldInfo> map;
-	
+
 	private Point minCoords;
-	
+
 	private Point maxCoords;
 
 	public GameMap() {
 		this.map = new HashMap<>();
 	}
-	
+
 	public Map<Point, FieldInfo> getMap() {
 		return map;
 	}
@@ -46,7 +57,7 @@ public class GameMap {
 			map.put(coords, newFld);
 			return newFld;
 		}
-		
+
 	}
 
 	public Field put(Point coords, Field field) {
@@ -59,7 +70,7 @@ public class GameMap {
 
 		return field;
 	}
-	
+
 	private void checkMaxAndMinCoords(Point coords) {
 		if (this.minCoords == null) {
 			this.minCoords = new Point(coords);
@@ -71,7 +82,7 @@ public class GameMap {
 				minCoords.y = coords.y;
 			}
 		}
-		
+
 		if (this.maxCoords == null) {
 			this.maxCoords = new Point(coords);
 		} else {
@@ -87,33 +98,33 @@ public class GameMap {
 	public FieldInfo get(int x, int y) {
 		return get(new Point(x, y));
 	}
-	
+
 	public List<FieldInfo> getFieldsByPattern(Pattern pattern, Point from, Point to) {
 		List<FieldInfo> ret = new ArrayList<>();
 		List<Point> points = pattern.applyPattern(from, to);
-		
+
 		for (Point pt : points) {
 			FieldInfo fld = get(pt);
 			ret.add(fld);
 		}
-		
+
 		return ret;
-		
+
 	}
 
 	public Field put(int x, int y, Field field) {
 		Point coords = new Point(x, y);
 		return put(coords, field);
 	}
-	
+
 	public List<Point> getNeighbourPoints(Point origin, boolean includeOrigin) {
 		Point[] points = new Point[Direction.values().length];
 		Arrays.fill(points, null);
-		
+
 		if (includeOrigin) {
 			points[Direction.ORIGIN.index()] = origin;
 		}
-		
+
 		points[Direction.NORTH.index()] = nextPointByCoords(origin, Direction.NORTH.dir());
 		points[Direction.SOUTH.index()] = nextPointByCoords(origin, Direction.SOUTH.dir());
 		points[Direction.EAST.index()] = nextPointByCoords(origin, Direction.EAST.dir());
@@ -121,34 +132,34 @@ public class GameMap {
 
 		return Arrays.asList(points);
 	}
-	
+
 	public List<FieldInfo> getNeighbours(Point origin, boolean includeOrigin) {
 		List<Point> neighborPoints = getNeighbourPoints(origin, includeOrigin);
 		List<FieldInfo> returnList = new LinkedList<>();
-		
+
 		for (int i = 0; i < neighborPoints.size(); i++) {
 			Point pt = neighborPoints.get(i);
 			if (pt != null) {
 				returnList.add(i, this.get(pt));
 			}
 		}
-		
+
 		return returnList;
 	}
-	
+
 	public List<Point> getNeighbourPoints(Point origin, boolean includeOrigin, int range, int pattern) {
 		Pattern patternToUse = null;
 		switch (pattern) {
-			case PATTERN_DIAMOND:
-				patternToUse = new DiamondPattern();
-				break;
-			case PATTERN_RECTANGLE:
-				patternToUse = new RectanglePattern();
-				break;
-			default:
-				return null;
+		case PATTERN_DIAMOND:
+			patternToUse = new DiamondPattern();
+			break;
+		case PATTERN_RECTANGLE:
+			patternToUse = new RectanglePattern();
+			break;
+		default:
+			return null;
 		}
-		
+
 		List<Point> points = patternToUse.applyPattern(origin, new Point(range, range));
 		if (!includeOrigin) {
 			points.remove(origin);
@@ -160,7 +171,7 @@ public class GameMap {
 	public Point nextPointByCoords(Point origin, Point offset) {
 		return nextPointByCoords(origin, offset.x, offset.y);
 	}
-	
+
 	public Point nextPointByCoords(Point origin, int x, int y) {
 		return new Point(origin.x + x, origin.y + y);
 	}
@@ -180,5 +191,5 @@ public class GameMap {
 	public void setMapGenerator(MapGenerator mapGenerator) {
 		this.mapGenerator = mapGenerator;
 	}
-	
+
 }

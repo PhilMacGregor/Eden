@@ -10,13 +10,13 @@ import cz.macgregor.eden.util.filecrawler.ResourceEntry;
  * A resource representing a single folder. Contains its children and child
  * folders in separate lists.
  * 
- * @author Filip Gregor
+ * @author MacGrego
  *
  */
 public class FolderResource extends ResourceEntry<File[]> {
-
+	/** child folders. */
 	private final Collection<FolderResource> childFolders;
-
+	/** child resources other than folders. */
 	private final Collection<ResourceEntry<?>> children;
 
 	/**
