@@ -7,11 +7,34 @@ import javax.swing.ImageIcon;
 
 import cz.macgregor.eden.core.logic.entities.Entity;
 
+/**
+ * Drawer that draws entities with position fixed to the center, sides or
+ * corners of a field.
+ * 
+ * @author MacGregor
+ *
+ */
 public class SimpleDrawer implements EntityDrawer {
+	/** x offset for entities to be drawn at. */
 	private final int offsetX;
+	/** y offset for entities to be drawn at. */
 	private final int offsetY;
+	/**
+	 * when drawing multiple entities, draw them this amount of pixels from each
+	 * other.
+	 */
 	private final int step;
 
+	/**
+	 * constructor.
+	 * 
+	 * @param beginOffsetX
+	 *            offset x
+	 * @param beginOffsetY
+	 *            offset y
+	 * @param offsetAdd
+	 *            step
+	 */
 	public SimpleDrawer(int beginOffsetX, int beginOffsetY, int offsetAdd) {
 		this.offsetX = beginOffsetX;
 		this.offsetY = beginOffsetY;

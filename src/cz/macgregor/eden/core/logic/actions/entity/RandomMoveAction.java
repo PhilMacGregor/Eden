@@ -14,8 +14,16 @@ import cz.macgregor.eden.core.logic.tiles.Field;
 import cz.macgregor.eden.core.logic.tiles.TileType;
 import cz.macgregor.eden.util.Utils;
 
+/**
+ * at the end of each turn, every subscriber entity moves randomly on random
+ * neighbor field.
+ * 
+ * @author MacGregor
+ *
+ */
 @ActionInfo(name = "randomMove", trigger = TriggerType.TURN_END)
 public class RandomMoveAction implements EntityAction {
+	/** the entity can not be moved to these tile types. */
 	private static final TileType[] FORBIDDEN_TYPES = new TileType[] { TileType.FOREST, TileType.MOUNTAINS,
 			TileType.WATER };
 

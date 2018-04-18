@@ -31,6 +31,10 @@ import cz.macgregor.eden.util.Utils;
  *
  */
 public class GraphicHandler {
+	/**
+	 * default entity offset for the simpleDrawers that draw the entities with
+	 * fixed positions at the center, sides or corners.
+	 */
 	private static final int ENTITY_DEFAULT_OFFSET = 5;
 
 	/** JLabel where the game map will be displayed. */
@@ -46,6 +50,10 @@ public class GraphicHandler {
 	/** debug mode. */
 	private boolean debugMode;
 
+	/**
+	 * drawers used for drawing entities. Each position has a drawer to be used
+	 * and each entity type has a position to be drawn at.
+	 */
 	private Map<Direction, EntityDrawer> positionDrawers;
 
 	/**

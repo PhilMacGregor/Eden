@@ -1,21 +1,29 @@
 package cz.macgregor.eden.core.logic.tiles;
 
 /**
- * first type of properties describing a field.
+ * first type of properties describing a field. todo: the field properties
+ * system is going to be completely overhauled and this class will no longer be
+ * supported in future
  * 
- * @todo the field properties system is going to be completely overhauled and
- *       this class will no longer be supported in future
  * @author MacGregor
  *
  */
 public class TileProps {
+	/** has the field water. */
 	private boolean water;
+	/** can have buildings. */
 	private boolean canBuild;
+	/** has buildings. */
 	private boolean buildings;
+	/** fertility. */
 	private int fertility;
+	/** wood supplies. */
 	private int wood;
+	/** stone supplies. */
 	private int stone;
+	/** ore supplies. */
 	private int ore;
+	/** danger. */
 	private int danger;
 
 	/**

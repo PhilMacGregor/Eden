@@ -12,8 +12,9 @@ import cz.macgregor.eden.core.logic.actions.ActionHolder.ActionEntry;
  *
  */
 public abstract class HasAction {
+	/** item type (TileType, EntityType). */
 	private Identifier<? extends HasAction> type;
-
+	/** actions this item is subscribed to. */
 	protected List<Action<HasAction>> actions;
 
 	/**

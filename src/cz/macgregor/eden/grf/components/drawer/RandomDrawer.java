@@ -15,8 +15,17 @@ import cz.macgregor.eden.core.logic.entities.EntityWithPosition;
 import cz.macgregor.eden.util.Const;
 import cz.macgregor.eden.util.Utils;
 
+/**
+ * drawer used for drawing the entities with positions. If the entity does not
+ * have position, draw it at random position.
+ * 
+ * @author MacGregor
+ *
+ */
 public class RandomDrawer implements EntityDrawer {
-	private static final int	Y_OFFSET_TOP		= 5;
+	/** minimum offset from top. */
+	private static final int Y_OFFSET_TOP = 5;
+	/** minimum offset from bottom. */
 	private static final int Y_OFFSET_BOTTOM = 5;
 
 	@Override
@@ -26,7 +35,7 @@ public class RandomDrawer implements EntityDrawer {
 		Entity[] entsArray = sortEntitiesByHeight(ents);
 		for (int i = 0; i < entsArray.length; i++) {
 			Entity ent = entsArray[i];
-			
+
 			int randX;
 			int randY;
 
@@ -37,7 +46,8 @@ public class RandomDrawer implements EntityDrawer {
 				randY = y + ((EntityWithPosition) ent).getCoordsY();
 			} else {
 				randX = x + (Utils.randomInt(0, Const.TILE_WIDTH - img.getIconWidth()));
-				randY = y + (Utils.randomInt(0 - Y_OFFSET_TOP, Const.TILE_HEIGHT - img.getIconHeight() - Y_OFFSET_BOTTOM));
+				randY = y + (Utils.randomInt(0 - Y_OFFSET_TOP,
+						Const.TILE_HEIGHT - img.getIconHeight() - Y_OFFSET_BOTTOM));
 			}
 
 			entsWithCoords.put(new PointByHeight(randX, randY), img);
@@ -49,13 +59,26 @@ public class RandomDrawer implements EntityDrawer {
 		}
 
 	}
-	
+
+	/**
+	 * sort the entities from higher to lower for them to display properly.
+	 * 
+	 * @param ents
+	 *            entities
+	 * @return sorted entity array
+	 */
 	private Entity[] sortEntitiesByHeight(List<Entity> ents) {
 		Entity[] ret = ents.toArray(new Entity[ents.size()]);
 		Arrays.sort(ret, new EntityHeightSorter());
 		return ret;
 	}
-	
+
+	/**
+	 * comparator used for sorting the entities.
+	 * 
+	 * @author MacGregor
+	 *
+	 */
 	private class EntityHeightSorter implements Comparator<Entity> {
 		@Override
 		public int compare(Entity ent1, Entity ent2) {
@@ -70,9 +93,23 @@ public class RandomDrawer implements EntityDrawer {
 		}
 	}
 
+	/**
+	 * the classic java.awt.Point, only with implemented Comparable.
+	 * 
+	 * @author MacGregor
+	 *
+	 */
 	private class PointByHeight extends Point implements Comparable<Point> {
 		private static final long serialVersionUID = 1L;
 
+		/**
+		 * constructor.
+		 * 
+		 * @param x
+		 *            x
+		 * @param y
+		 *            y
+		 */
 		private PointByHeight(int x, int y) {
 			super(x, y);
 		}

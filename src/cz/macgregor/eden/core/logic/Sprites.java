@@ -16,8 +16,9 @@ import cz.macgregor.eden.util.filecrawler.ResourceEntry;
  *
  */
 public class Sprites {
+	/** the instance. */
 	private static Sprites instance;
-
+	/** sprites and their qualified names. */
 	private Map<String, Sprite> spriteMap;
 
 	/**
@@ -72,6 +73,7 @@ public class Sprites {
 	 *
 	 */
 	private class Sprite {
+		/** the icon encapsulated by the sprite. */
 		private final ImageIcon icon;
 
 		/**

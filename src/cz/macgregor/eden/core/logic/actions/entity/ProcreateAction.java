@@ -13,6 +13,13 @@ import cz.macgregor.eden.core.logic.entities.EntityWithPosition;
 import cz.macgregor.eden.core.logic.tiles.Field;
 import cz.macgregor.eden.util.Const;
 
+/**
+ * when Adam and Eve are present at the same point, create a bulding with
+ * birthAction there.
+ * 
+ * @author MacGregor
+ *
+ */
 @ActionInfo(name = "procreate", trigger = TriggerType.TURN_END)
 public class ProcreateAction implements EntityAction {
 
