@@ -12,14 +12,34 @@ import javax.swing.JTextField;
 import cz.macgregor.eden.core.logic.Sprites;
 import cz.macgregor.eden.core.logic.indicator.Indicator;
 
+/**
+ * indicator used to display an information about single resource amount with
+ * its icon and tooltip.
+ * 
+ * @author MacGregor
+ *
+ */
 public class ValueIndicator extends JPanel implements Indicator {
 	private static final long serialVersionUID = 1L;
 
-	private final JLabel			imageLabel;
-	private final JTextField	valueField;
+	/** label to display the icon. */
+	private final JLabel imageLabel;
+	/** text field to display the value. */
+	private final JTextField valueField;
 
+	/**
+	 * value to be displayed.
+	 */
 	private int value;
 
+	/**
+	 * constructor.
+	 * 
+	 * @param icon
+	 *            icon qualified name.
+	 * @param name
+	 *            tooltip
+	 */
 	public ValueIndicator(String icon, String name) {
 		ImageIcon img = Sprites.image(icon);
 
@@ -53,12 +73,27 @@ public class ValueIndicator extends JPanel implements Indicator {
 		return value;
 	}
 
+	/**
+	 * label for the icon.sb
+	 * 
+	 * @author MacGregor
+	 *
+	 */
 	private class IconLabel extends JLabel {
 		private static final long serialVersionUID = 1L;
 
+		/**
+		 * the icon to display.
+		 */
 		private final ImageIcon icon;
 
-		private IconLabel(ImageIcon	icon) {
+		/**
+		 * constructor.
+		 * 
+		 * @param icon
+		 *            icon
+		 */
+		private IconLabel(ImageIcon icon) {
 			this.icon = icon;
 			this.setPreferredSize(new Dimension(icon.getIconWidth(), icon.getIconHeight()));
 			repaint();

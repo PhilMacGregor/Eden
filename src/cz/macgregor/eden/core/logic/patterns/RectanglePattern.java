@@ -4,6 +4,12 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Rctangle-shaped pattern with the center on the origin point.
+ * 
+ * @author MacGregor
+ *
+ */
 public class RectanglePattern extends Pattern {
 
 	@Override

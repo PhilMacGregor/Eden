@@ -4,6 +4,12 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The rectangle-shaped pattern with the origin in its top-left corner.
+ * 
+ * @author MacGregor
+ *
+ */
 public class StandardPattern extends Pattern {
 
 	@Override
