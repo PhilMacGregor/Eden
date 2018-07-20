@@ -31,12 +31,13 @@ public class ProcreateAction implements EntityAction {
 			return;
 		}
 
-		boolean hasEve = false;
+		Entity eve = null;
+
 		boolean hasBuildings = false;
 		for (Entity other : fld.getEntities()) {
 
 			if (other.getType() == EntityType.EVE) {
-				hasEve = true;
+				eve = other;
 			}
 
 			if (other.getType() == EntityType.BUILDING) {
@@ -45,10 +46,12 @@ public class ProcreateAction implements EntityAction {
 
 		}
 
-		if (hasEve && !hasBuildings) {
+		if (eve != null && !hasBuildings) {
 			Point centerPoint = getCenterForIcon(EntityType.BUILDING.getImage());
 
 			Entity house = new EntityWithPosition(EntityType.BUILDING, centerPoint.x, centerPoint.y);
+			house.setProp("mother", eve.getPropAsString("name"));
+			house.setProp("father", ent.getPropAsString("name"));
 			MapObjectFactory.addDefaultActions(house);
 			fld.addEntity(house);
 		}

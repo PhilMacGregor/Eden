@@ -18,7 +18,6 @@ import cz.macgregor.eden.grf.components.drawactions.DrawEntities;
 import cz.macgregor.eden.grf.components.drawactions.DrawInfo;
 import cz.macgregor.eden.grf.components.drawactions.DrawTiles;
 import cz.macgregor.eden.grf.components.drawer.EntityDrawer;
-import cz.macgregor.eden.grf.listener.CanvasMouseListener;
 import cz.macgregor.eden.util.Const;
 
 /**
@@ -80,8 +79,6 @@ public class CanvasLabel extends JLabel {
 		drawActions.add(new DrawEntities(DrawTarget.LAYER_BIO, drawers));
 		drawActions.add(new DrawEntities(DrawTarget.LAYER_CLOUDS, drawers));
 		drawActions.add(drawInfoAction);
-
-		this.addMouseListener(new CanvasMouseListener(this));
 	}
 
 	public Point getFocusPoint() {

@@ -7,20 +7,24 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.swing.JFrame;
+import javax.swing.UIManager;
 
 import cz.macgregor.eden.core.GameHandler;
 import cz.macgregor.eden.core.logic.GameMap;
 import cz.macgregor.eden.core.logic.entities.DrawTarget;
 import cz.macgregor.eden.core.logic.entities.DrawTarget.Direction;
 import cz.macgregor.eden.core.logic.entities.EntityType;
+import cz.macgregor.eden.core.logic.tiles.Field;
 import cz.macgregor.eden.grf.components.bottom.BottomPanel;
 import cz.macgregor.eden.grf.components.canvas.CanvasLabel;
 import cz.macgregor.eden.grf.components.drawer.CenterDrawer;
 import cz.macgregor.eden.grf.components.drawer.EntityDrawer;
 import cz.macgregor.eden.grf.components.drawer.RandomDrawer;
 import cz.macgregor.eden.grf.components.drawer.SimpleDrawer;
+import cz.macgregor.eden.grf.components.right.RightPanel;
 import cz.macgregor.eden.grf.components.top.TopPanel;
 import cz.macgregor.eden.grf.listener.CanvasKeyListener;
+import cz.macgregor.eden.grf.listener.CanvasMouseListener;
 import cz.macgregor.eden.util.Const;
 import cz.macgregor.eden.util.Utils;
 
@@ -43,10 +47,16 @@ public class GraphicHandler {
 	private final BottomPanel bottomPanel;
 	/** top panel with context information. */
 	private final TopPanel topPanel;
+	/** right panel for unit selection and info. */
+	private final RightPanel rightPanel;
 	/** focus point for the canvas label. */
 	private Point focusPoint;
 	/** application window. */
 	private final JFrame frame;
+
+	/** field selected by the mouse listener. */
+	private Field selectedField;
+
 	/** debug mode. */
 	private boolean debugMode;
 
@@ -71,6 +81,12 @@ public class GraphicHandler {
 	public GraphicHandler(int canvasWidth, int canvasHeight, GameHandler gameHandler) {
 		initEntityDrawers();
 
+		try {
+			UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+		} catch (Throwable t) {
+			throw new RuntimeException("Failed to set the look and feel.", t);
+		}
+
 		this.setDebugMode(Const.SCREEN_DEBUG);
 
 		this.frame = new JFrame(Const.APP_NAME);
@@ -81,17 +97,24 @@ public class GraphicHandler {
 		canvasLabel.setPreferredSize(canvasSize);
 		canvasLabel.addKeyListener(new CanvasKeyListener(gameHandler));
 		canvasLabel.setFocusable(true);
+		canvasLabel.addMouseListener(new CanvasMouseListener(canvasLabel, this));
 
 		this.bottomPanel = new BottomPanel();
 		this.topPanel = new TopPanel();
+
+		this.rightPanel = new RightPanel(positionDrawers);
+		rightPanel.setPreferredSize(new Dimension(300, canvasHeight * Const.TILE_HEIGHT));
 
 		this.focusPoint = new Point(0, 0);
 
 		frame.add(canvasLabel, BorderLayout.CENTER);
 		frame.add(topPanel, BorderLayout.NORTH);
 		frame.add(bottomPanel, BorderLayout.SOUTH);
-		frame.pack();
+		frame.add(rightPanel, BorderLayout.EAST);
 		frame.setResizable(false);
+		frame.pack();
+
+		rightPanel.update(selectedField);
 
 		canvasLabel.requestFocus();
 
@@ -137,6 +160,26 @@ public class GraphicHandler {
 	}
 
 	/**
+	 * getter.
+	 * 
+	 * @return the selectedField
+	 */
+	public Field getSelectedField() {
+		return selectedField;
+	}
+
+	/**
+	 * setter.
+	 * 
+	 * @param selectedField
+	 *            the selectedField to set
+	 */
+	public void setSelectedField(Field selectedField) {
+		this.selectedField = selectedField;
+		this.rightPanel.update(selectedField);
+	}
+
+	/**
 	 * start the initialised graphics. Set the application window to visible.
 	 */
 	public void start() {
@@ -163,6 +206,10 @@ public class GraphicHandler {
 
 		DrawTarget.LAYER_GROUND.addEntity(EntityType.ADAM, Direction.RANDOM);
 		DrawTarget.LAYER_GROUND.addEntity(EntityType.EVE, Direction.RANDOM);
+		DrawTarget.LAYER_GROUND.addEntity(EntityType.SON, Direction.RANDOM);
+		DrawTarget.LAYER_GROUND.addEntity(EntityType.DAUGHTER, Direction.RANDOM);
+		DrawTarget.LAYER_GROUND.addEntity(EntityType.GRANDPA, Direction.RANDOM);
+		DrawTarget.LAYER_GROUND.addEntity(EntityType.GRANDMA, Direction.RANDOM);
 
 		DrawTarget.LAYER_GROUND.addEntity(EntityType.BUILDING, Direction.RANDOM);
 

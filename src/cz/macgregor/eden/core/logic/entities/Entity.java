@@ -1,10 +1,9 @@
 package cz.macgregor.eden.core.logic.entities;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
-import cz.macgregor.eden.core.logic.actions.Action;
 import cz.macgregor.eden.core.logic.actions.ActionHolder.ActionEntry;
 import cz.macgregor.eden.core.logic.actions.HasAction;
 import cz.macgregor.eden.core.logic.actions.Identifier;
@@ -20,9 +19,7 @@ public class Entity extends HasAction {
 	/** field that the entity is located at. */
 	private Field field;
 	/** entity properties. */
-	private final Map<String, String> entityProps;
-	/** actions this entity is subscribed to. */
-	private List<Action<HasAction>> actions;
+	private final Map<String, Object> entityProps;
 
 	/**
 	 * constructor.
@@ -43,12 +40,16 @@ public class Entity extends HasAction {
 	 * @param value
 	 *            value
 	 */
-	public void setProp(String key, String value) {
+	public void setProp(String key, Object value) {
 		entityProps.put(key, value);
 	}
 
-	public String getProp(String key) {
+	public Object getProp(String key) {
 		return entityProps.get(key);
+	}
+
+	public String getPropAsString(String key) {
+		return Objects.toString(getProp(key), "");
 	}
 
 	/**

@@ -29,12 +29,35 @@ public enum EntityType implements Identifier<Entity> {
 	 * holds the procreate action too.
 	 */
 	@Subscriber({ "explore", "randomMove", "procreate" })
-	ADAM("Adam", "img.ent.mob.adam.png", true),
+	ADAM("Male", "img.ent.mob.adam.png", true),
 	/**
 	 * Eve - female. Has the explore and random move action.
 	 */
 	@Subscriber({ "explore", "randomMove" })
-	EVE("Eve", "img.ent.mob.eve.png", true),
+	EVE("Female", "img.ent.mob.eve.png", true),
+	/**
+	 * male child. Every human is born as a child and then it grows older. The
+	 * Son aquires Procreate action when it turns into Adam.
+	 */
+	@Subscriber({ "explore", "randomMove", "age" })
+	SON("Male child", "img.ent.mob.son.png", true),
+	/**
+	 * female child. Every human is born as a child and then it grows older.
+	 */
+	@Subscriber({ "explore", "randomMove", "age" })
+	DAUGHTER("Female child", "img.ent.mob.daughter.png", true),
+
+	/**
+	 * Old man. Can no longer procreate.
+	 */
+	@Subscriber({ "explore", "randomMove" })
+	GRANDPA("Old man", "img.ent.mob.adam.png", true),
+	/**
+	 * Old woman. Can no longer procreate.
+	 */
+	@Subscriber({ "explore", "randomMove" })
+	GRANDMA("Old woman", "img.ent.mob.eve.png", true),
+
 	/** tree, randomly generated in forest or by growForest action. */
 	PINETREE("pineTree", "img.ent.nature.pinetree.png"),
 	/** mountain, randomly generated on mountains field. */

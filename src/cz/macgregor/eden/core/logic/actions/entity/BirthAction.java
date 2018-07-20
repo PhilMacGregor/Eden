@@ -8,6 +8,7 @@ import cz.macgregor.eden.core.logic.entities.EntityType;
 import cz.macgregor.eden.core.logic.tiles.Field;
 import cz.macgregor.eden.grf.components.top.ValueIndicators;
 import cz.macgregor.eden.util.Utils;
+import cz.macgregor.eden.util.namegen.Names;
 
 /**
  * The action used for birth of new humans.<br>
@@ -29,6 +30,16 @@ public class BirthAction implements EntityAction {
 	/** maximum dwellers for a single house. */
 	private static final int MAX_DWELLERS = 5;
 
+	/** random names generator. */
+	private final Names names;
+
+	/**
+	 * constructor.
+	 */
+	public BirthAction() {
+		this.names = new Names();
+	}
+
 	@Override
 	public void doAction(Entity ent) {
 		int dwellers = 0;
@@ -49,9 +60,17 @@ public class BirthAction implements EntityAction {
 		int doBirth = Utils.randomInt(0, probability);
 
 		if (doBirth >= probability - 1) {
-			int isMale = Utils.randomInt(0, 2);
+			boolean isMale = Utils.randomInt(0, 2) == 1;
 
-			Entity newBorn = MapObjectFactory.createEntity(isMale == 1 ? EntityType.ADAM : EntityType.EVE);
+			Entity newBorn = MapObjectFactory.createEntity(isMale ? EntityType.SON : EntityType.DAUGHTER);
+			newBorn.setProp("name", names.generate(isMale));
+			newBorn.setProp("mother", ent.getPropAsString("mother"));
+			newBorn.setProp("father", ent.getPropAsString("father"));
+			newBorn.setProp("gender", isMale ? "male" : "female");
+
+			System.out.println(newBorn.getPropAsString("name") + " was born to " + newBorn.getPropAsString("mother")
+					+ " and " + newBorn.getPropAsString("father") + ".");
+
 			fld.addEntity(newBorn);
 			fld.addEntity(MapObjectFactory.createEntity(EntityType.DWELLER_COUNT));
 

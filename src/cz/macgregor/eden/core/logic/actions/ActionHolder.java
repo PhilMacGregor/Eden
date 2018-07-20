@@ -4,7 +4,9 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -188,13 +190,20 @@ public class ActionHolder {
 	 *            trigger
 	 */
 	public static synchronized void activateTrigger(TriggerType trig) {
+
 		for (ActionEntry holder : actionsByTrigger(trig)) {
 
-			for (HasAction ent : holder.subscribers) {
-				holder.action.doAction(ent);
+			try {
+				for (HasAction ent : holder.subscribers) {
+					holder.action.doAction(ent);
+				}
+			} catch (Throwable t) {
+				RuntimeException e = new RuntimeException("Exception occured during action " + holder.toString(), t);
+				throw e;
 			}
 
 		}
+
 	}
 
 	/**
@@ -248,7 +257,7 @@ public class ActionHolder {
 		private ActionEntry(TriggerType trigger, Action<HasAction> action) {
 			this.trigger = trigger;
 			this.action = action;
-			this.subscribers = new ArrayList<>();
+			this.subscribers = Collections.synchronizedList(new LinkedList<>());
 		}
 
 		/**

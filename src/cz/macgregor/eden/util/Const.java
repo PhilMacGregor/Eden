@@ -17,7 +17,7 @@ public final class Const {
 	public static final int TILE_HEIGHT = 60;
 
 	/** tile canvas width in tiles. */
-	public static final int CANVAS_WIDTH = 15;
+	public static final int CANVAS_WIDTH = 12;
 	/** tile canvas height in tiles. */
 	public static final int CANVAS_HEIGHT = 10;
 

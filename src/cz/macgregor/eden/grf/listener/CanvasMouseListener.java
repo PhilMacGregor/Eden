@@ -8,6 +8,7 @@ import java.util.List;
 import cz.macgregor.eden.core.logic.entities.Entity;
 import cz.macgregor.eden.core.logic.entities.EntityUtils;
 import cz.macgregor.eden.core.logic.tiles.Field;
+import cz.macgregor.eden.grf.GraphicHandler;
 import cz.macgregor.eden.grf.components.canvas.CanvasLabel;
 import cz.macgregor.eden.util.Const;
 
@@ -18,17 +19,20 @@ import cz.macgregor.eden.util.Const;
 public class CanvasMouseListener implements MouseListener {
 	/** canvas to be used. */
 	private CanvasLabel label;
-	/** field selected. */
-	private Field selectedField;
+	/** graphic handler to store the selected field. */
+	private GraphicHandler graphicHandler;
 
 	/**
 	 * constructor.
 	 * 
 	 * @param parent
 	 *            parent label
+	 * @param grfHandler
+	 *            graphic handler
 	 */
-	public CanvasMouseListener(CanvasLabel parent) {
+	public CanvasMouseListener(CanvasLabel parent, GraphicHandler grfHandler) {
 		this.label = parent;
+		this.graphicHandler = grfHandler;
 	}
 
 	@Override
@@ -50,6 +54,7 @@ public class CanvasMouseListener implements MouseListener {
 
 	@Override
 	public void mousePressed(MouseEvent e) {
+		label.requestFocus();
 		selectFieldAction(e);
 
 	}
@@ -74,24 +79,27 @@ public class CanvasMouseListener implements MouseListener {
 			return;
 		}
 
-		if (this.selectedField != null) {
-			this.selectedField.setSelected(false);
+		if (graphicHandler.getSelectedField() != null) {
+			graphicHandler.getSelectedField().setSelected(false);
 
-			if (!fieldClicked.equals(selectedField)) {
+			List<Entity> movableEntities = graphicHandler.getSelectedField().getMovableEntities();
 
-				List<Entity> movableEntities = selectedField.getMovableEntities();
+			if (movableEntities.isEmpty()) {
+				graphicHandler.setSelectedField(fieldClicked);
+				fieldClicked.setSelected(!fieldClicked.isSelected());
+			} else {
 
 				for (Entity ent : movableEntities) {
 					EntityUtils.moveEntity(ent, fieldClicked);
 				}
 
-			}
+				graphicHandler.setSelectedField(null);
 
-			this.selectedField = null;
+			}
 
 		} else {
 			fieldClicked.setSelected(!fieldClicked.isSelected());
-			this.selectedField = fieldClicked;
+			graphicHandler.setSelectedField(fieldClicked);
 		}
 
 		label.repaint();

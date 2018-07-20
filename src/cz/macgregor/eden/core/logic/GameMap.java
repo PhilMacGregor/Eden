@@ -96,7 +96,7 @@ public class GameMap {
 	 * @return the field
 	 */
 	public Field put(Point coords, Field field) {
-		System.out.println("adding " + field.getType() + " to " + coords);
+		// System.out.println("adding " + field.getType() + " to " + coords);
 		checkMaxAndMinCoords(coords);
 		get(coords).setField(field);
 		field.setParent(this);

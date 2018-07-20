@@ -10,6 +10,7 @@ import cz.macgregor.eden.core.logic.MapObjectFactory;
 import cz.macgregor.eden.core.logic.Sprites;
 import cz.macgregor.eden.core.logic.actions.ActionHolder;
 import cz.macgregor.eden.core.logic.actions.TriggerType;
+import cz.macgregor.eden.core.logic.entities.Entity;
 import cz.macgregor.eden.core.logic.entities.EntityType;
 import cz.macgregor.eden.core.logic.patterns.DiamondPattern;
 import cz.macgregor.eden.core.logic.patterns.RectanglePattern;
@@ -71,8 +72,15 @@ public class GameHandler {
 
 		mapGen.fillPattern(new RectanglePattern(), startPoint, new Point(INITIAL_MAP_SIZE, INITIAL_MAP_SIZE));
 
-		map.get(1, 0).getField().addEntity(MapObjectFactory.createEntity(EntityType.ADAM));
-		map.get(-1, 0).getField().addEntity(MapObjectFactory.createEntity(EntityType.EVE));
+		Entity adam = MapObjectFactory.createEntity(EntityType.ADAM);
+		adam.setProp("name", "Adam");
+		adam.setProp("gender", "male");
+		Entity eve = MapObjectFactory.createEntity(EntityType.EVE);
+		eve.setProp("name", "Eve");
+		eve.setProp("gender", "female");
+
+		map.get(1, 0).getField().addEntity(adam);
+		map.get(-1, 0).getField().addEntity(eve);
 		ValueIndicators.POPULATION.update(2);
 
 		// map.get(1,

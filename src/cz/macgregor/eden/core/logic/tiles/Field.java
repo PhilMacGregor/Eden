@@ -9,6 +9,8 @@ import cz.macgregor.eden.core.logic.GameMap;
 import cz.macgregor.eden.core.logic.actions.HasAction;
 import cz.macgregor.eden.core.logic.actions.Identifier;
 import cz.macgregor.eden.core.logic.entities.Entity;
+import cz.macgregor.eden.util.Selector;
+import cz.macgregor.eden.util.Selector.Filter;
 
 /**
  * class representing a single field from the game map.
@@ -138,13 +140,28 @@ public class Field extends HasAction {
 	 * @return movable entities.
 	 */
 	public List<Entity> getMovableEntities() {
-		List<Entity> ents = new ArrayList<>();
-		for (Entity ent : this.entities) {
-			if (ent.getType().isMovable()) {
-				ents.add(ent);
-			}
-		}
+		return filterEntities(t -> t.getType().isMovable());
+	}
 
+	/**
+	 * get all entites from the field that cannot be moved.
+	 * 
+	 * @return immobile entities.
+	 */
+	public List<Entity> getStaticEntities() {
+		return filterEntities(t -> !t.getType().isMovable());
+	}
+
+	/**
+	 * get entities selected by a given filter.
+	 * 
+	 * @param filter
+	 *            filter to apply
+	 * @return filtered entities
+	 */
+	public List<Entity> filterEntities(Filter<Entity> filter) {
+		List<Entity> ents = new ArrayList<>();
+		new Selector<Entity>().select(this.entities, ents, filter);
 		return ents;
 	}
 
