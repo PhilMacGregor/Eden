@@ -1,12 +1,11 @@
 package cz.macgregor.eden.core.logic.actions.entity;
 
-import java.util.Objects;
-
 import cz.macgregor.eden.core.logic.actions.ActionHolder;
 import cz.macgregor.eden.core.logic.actions.ActionInfo;
 import cz.macgregor.eden.core.logic.actions.TriggerType;
 import cz.macgregor.eden.core.logic.entities.Entity;
 import cz.macgregor.eden.core.logic.entities.EntityType;
+import cz.macgregor.eden.grf.components.top.ValueIndicators;
 
 /**
  * action that handles human aging. The humans are born as children, then they
@@ -19,8 +18,8 @@ import cz.macgregor.eden.core.logic.entities.EntityType;
 public class AgeAction implements EntityAction {
 
 	private static final int AGE_ADULT = 5;
-	private static final int AGE_OLD = 30;
-	private static final int MORTALITY = 1;
+	private static final int AGE_OLD = 60;
+	private static final int MORTALITY = 100;
 
 	@Override
 	public void doAction(Entity ent) {
@@ -28,7 +27,9 @@ public class AgeAction implements EntityAction {
 			ent.setProp("age", 0);
 		}
 
-		if (Objects.equals(ent.getProp("age"), AGE_ADULT)) {
+		int age = (int) ent.getProp("age");
+
+		if (age == AGE_ADULT) {
 			switch (ent.getType()) {
 			case SON:
 				ent.setType(EntityType.ADAM);
@@ -44,7 +45,7 @@ public class AgeAction implements EntityAction {
 			}
 		}
 
-		if (Objects.equals(ent.getProp("age"), AGE_OLD)) {
+		if (age == AGE_OLD) {
 			switch (ent.getType()) {
 			case ADAM:
 				ent.setType(EntityType.GRANDPA);
@@ -59,7 +60,14 @@ public class AgeAction implements EntityAction {
 			System.out.println(ent.getPropAsString("name") + " has got old.");
 		}
 
-		ent.setProp("age", (Integer) ent.getProp("age") + 1);
+		if (age == MORTALITY) {
+			System.out.println(ent.getPropAsString("name") + " died at age of " + age + ".");
+			ent.kill();
+			ValueIndicators.POPULATION.update(-1);
+			return;
+		}
+
+		ent.setProp("age", age + 1);
 
 	}
 

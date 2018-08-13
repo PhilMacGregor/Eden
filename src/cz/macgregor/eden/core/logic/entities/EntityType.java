@@ -40,23 +40,23 @@ public enum EntityType implements Identifier<Entity> {
 	 * Son aquires Procreate action when it turns into Adam.
 	 */
 	@Subscriber({ "explore", "randomMove", "age" })
-	SON("Male child", "img.ent.mob.son.png", true),
+	SON("Male child", "img.ent.mob.leiftrasi.png", true),
 	/**
 	 * female child. Every human is born as a child and then it grows older.
 	 */
 	@Subscriber({ "explore", "randomMove", "age" })
-	DAUGHTER("Female child", "img.ent.mob.daughter.png", true),
+	DAUGHTER("Female child", "img.ent.mob.lif.png", true),
 
 	/**
 	 * Old man. Can no longer procreate.
 	 */
 	@Subscriber({ "explore", "randomMove" })
-	GRANDPA("Old man", "img.ent.mob.adam.png", true),
+	GRANDPA("Old man", "img.ent.mob.methusalem.png", true),
 	/**
 	 * Old woman. Can no longer procreate.
 	 */
 	@Subscriber({ "explore", "randomMove" })
-	GRANDMA("Old woman", "img.ent.mob.eve.png", true),
+	GRANDMA("Old woman", "img.ent.mob.morrigan.png", true),
 
 	/** tree, randomly generated in forest or by growForest action. */
 	PINETREE("pineTree", "img.ent.nature.pinetree.png"),

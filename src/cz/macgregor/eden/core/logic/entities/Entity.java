@@ -4,7 +4,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+import cz.macgregor.eden.core.logic.actions.Action;
+import cz.macgregor.eden.core.logic.actions.ActionHolder;
 import cz.macgregor.eden.core.logic.actions.ActionHolder.ActionEntry;
+import cz.macgregor.eden.core.logic.actions.ActionInfo;
 import cz.macgregor.eden.core.logic.actions.HasAction;
 import cz.macgregor.eden.core.logic.actions.Identifier;
 import cz.macgregor.eden.core.logic.tiles.Field;
@@ -72,6 +75,17 @@ public class Entity extends HasAction {
 	public void removeAction(ActionEntry action) {
 		this.actions.remove(action.getAction());
 		action.removeSubscriber(this);
+	}
+
+	/**
+	 * remove the entity from the map and unregister all its actions.
+	 */
+	public void kill() {
+		getField().removeEntity(this);
+		for (Action<HasAction> action : this.actions) {
+			String actionName = action.getClass().getAnnotation(ActionInfo.class).name();
+			ActionHolder.byName(actionName).removeSubscriber(this);
+		}
 	}
 
 	/**
