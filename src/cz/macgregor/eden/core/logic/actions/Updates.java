@@ -17,9 +17,9 @@ public class Updates {
 
   private Map<Field, TileType> fieldsToChange;
 
-  private Map<HasAction, List<Action<?>>> actionsToAdd;
+  private Map<HasAction, List<String>> actionsToAdd;
 
-  private Map<HasAction, List<Action<?>>> actionsToRemove;
+  private Map<HasAction, List<String>> actionsToRemove;
 
   /**
    * @param entitiesToAdd
@@ -52,16 +52,16 @@ public class Updates {
     fieldsToChange.put(oldField, newField);
   }
 
-  public void addActions(HasAction obj, Action<?>... actions) {
-    List<Action<?>> acts = actionsToAdd.get(obj);
+  public void addActions(HasAction obj, String... actions) {
+    List<String> acts = actionsToAdd.get(obj);
     if (acts == null) {
       actionsToAdd.put(obj, new ArrayList<>());
     }
     actionsToAdd.get(obj).addAll(Arrays.asList(actions));
   }
 
-  public void removeActions(HasAction obj, Action<?>... actions) {
-    List<Action<?>> acts = actionsToRemove.get(obj);
+  public void removeActions(HasAction obj, String... actions) {
+    List<String> acts = actionsToRemove.get(obj);
     if (acts == null) {
       actionsToRemove.put(obj, new ArrayList<>());
     }
@@ -85,21 +85,21 @@ public class Updates {
   /**
    * @return the fieldsToChange
    */
-  public Map<Field, Field> getFieldsToChange() {
+  public Map<Field, TileType> getFieldsToChange() {
     return this.fieldsToChange;
   }
 
   /**
    * @return the actionsToAdd
    */
-  public Map<HasAction, List<Action<?>>> getActionsToAdd() {
+  public Map<HasAction, List<String>> getActionsToAdd() {
     return this.actionsToAdd;
   }
 
   /**
    * @return the actionsToRemove
    */
-  public Map<HasAction, List<Action<?>>> getActionsToRemove() {
+  public Map<HasAction, List<String>> getActionsToRemove() {
     return this.actionsToRemove;
   }
 

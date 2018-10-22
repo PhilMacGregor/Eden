@@ -1,6 +1,5 @@
 package cz.macgregor.eden.core.logic.actions;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -9,9 +8,12 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
+import cz.macgregor.eden.core.logic.entities.Entity;
 import cz.macgregor.eden.core.logic.entities.EntityType;
 import cz.macgregor.eden.core.logic.entities.Subscriber;
+import cz.macgregor.eden.core.logic.tiles.Field;
 import cz.macgregor.eden.core.logic.tiles.TileType;
 import cz.macgregor.eden.util.filecrawler.FileCrawler;
 import cz.macgregor.eden.util.filecrawler.ResourceEntry;
@@ -25,296 +27,318 @@ import cz.macgregor.eden.util.filecrawler.ResourceEntry;
  *
  */
 public class ActionHolder {
-	/** map of the action entries by name. */
-	private final Map<String, ActionEntry> entries;
-	/** map of the actions for each trigger. */
-	private final Map<TriggerType, List<ActionEntry>> entriesByTrigger;
-	/** default actions for each HasAction. */
-	private final Map<Identifier<? extends HasAction>, ActionEntry[]> defaultActions;
+  /** map of the action entries by name. */
+  private final Map<String, ActionEntry> entries;
+  /** map of the actions for each trigger. */
+  private final Map<TriggerType, List<ActionEntry>> entriesByTrigger;
+  /** default actions for each HasAction. */
+  private final Map<Identifier<? extends HasAction>, ActionEntry[]> defaultActions;
 
-	public static ActionHolder getInstance() {
-		return InstanceHolder.INSTANCE.instance;
-	}
+  public static ActionHolder getInstance() {
+    return InstanceHolder.INSTANCE.instance;
+  }
 
-	/**
-	 * constructor.
-	 */
-	private ActionHolder() {
-		this.entries = new HashMap<>();
-		this.entriesByTrigger = new HashMap<>();
-		this.defaultActions = new HashMap<>();
+  /**
+   * constructor.
+   */
+  private ActionHolder() {
+    this.entries = new HashMap<>();
+    this.entriesByTrigger = new HashMap<>();
+    this.defaultActions = new HashMap<>();
 
-		initEntriesByTrigger();
-		initDefaultActions(TileType.class);
-		initDefaultActions(EntityType.class);
+    initEntriesByTrigger();
+    initDefaultActions(TileType.class);
+    initDefaultActions(EntityType.class);
 
-	}
+  }
 
-	/**
-	 * initialisation method to map the all actions and create the action
-	 * entries based on their trigger. <br>
-	 * <br>
-	 * <ol>
-	 * <li>Crawls the package where the actions to be mapped are expected using
-	 * the FileCrawler.</li>
-	 * <li>For each class annotated with ActionInfo, create a new ActionEntry,
-	 * containing the trigger from the annotation and a new instance of the
-	 * class.</li>
-	 * <li>Also, put the action in the Entries map with a name from the
-	 * annotation.</li>
-	 * </ol>
-	 * The ActionInfo annotation must be only used with the Action class. The
-	 * type of the mapped class is currently unchecked and the illegal type will
-	 * result in failure of the application on startup.
-	 * 
-	 */
-	private void initEntriesByTrigger() {
-		try {
-			Collection<ResourceEntry<?>> resources = FileCrawler.getInstance()
-					.searchFolder("cz.macgregor.eden.core.logic.actions", ".class");
-			for (ResourceEntry<?> res : resources) {
-				Class<?> clazz = (Class<?>) res.getResource();
-				ActionInfo actionInfo = clazz.getAnnotation(ActionInfo.class);
+  /**
+   * initialisation method to map the all actions and create the action entries
+   * based on their trigger. <br>
+   * <br>
+   * <ol>
+   * <li>Crawls the package where the actions to be mapped are expected using
+   * the FileCrawler.</li>
+   * <li>For each class annotated with ActionInfo, create a new ActionEntry,
+   * containing the trigger from the annotation and a new instance of the
+   * class.</li>
+   * <li>Also, put the action in the Entries map with a name from the
+   * annotation.</li>
+   * </ol>
+   * The ActionInfo annotation must be only used with the Action class. The type
+   * of the mapped class is currently unchecked and the illegal type will result
+   * in failure of the application on startup.
+   * 
+   */
+  private void initEntriesByTrigger() {
+    try {
+      Collection<ResourceEntry<?>> resources = FileCrawler.getInstance().searchFolder("cz.macgregor.eden.core.logic.actions", ".class");
+      for (ResourceEntry<?> res : resources) {
+        Class<?> clazz = (Class<?>) res.getResource();
+        ActionInfo actionInfo = clazz.getAnnotation(ActionInfo.class);
 
-				if (actionInfo == null) {
-					continue;
-				}
+        if (actionInfo == null) {
+          continue;
+        }
 
-				@SuppressWarnings("unchecked")
-				ActionEntry entry = new ActionEntry(actionInfo.trigger(), (Action<HasAction>) clazz.newInstance());
-				entries.put(actionInfo.name(), entry);
-				getActionsByTrigger(actionInfo.trigger()).add(entry);
-			}
+        @SuppressWarnings("unchecked")
+        ActionEntry entry = new ActionEntry(actionInfo.trigger(), (Action<HasAction>) clazz.newInstance());
+        entries.put(actionInfo.name(), entry);
+        getActionsByTrigger(actionInfo.trigger()).add(entry);
+      }
 
-		} catch (IllegalAccessException | InstantiationException e) {
-			throw new RuntimeException("failed to instantiate the action.", e);
-		}
-	}
+    } catch (IllegalAccessException | InstantiationException e) {
+      throw new RuntimeException("failed to instantiate the action.", e);
+    }
+  }
 
-	/**
-	 * Method that check a given enum (probably works with standard classes too,
-	 * but this is not checked) and maps its instances to the map with their
-	 * default actions. The class must implement an Identifier interface.<br>
-	 * <br>
-	 * <ol>
-	 * <li>for each field of the class, check if it's annotated with
-	 * Subscriber.</li>
-	 * <li>for all actions from the Subscriber annotation, put an item to the
-	 * defaultActions with the field as the key and the actions array as the
-	 * value.</li>
-	 * </ol>
-	 * 
-	 * @param clazz
-	 *            class to be mapped
-	 */
-	private void initDefaultActions(Class<?> clazz) {
-		for (Field fld : clazz.getFields()) {
-			Subscriber subscriberInfo = fld.getAnnotation(Subscriber.class);
+  /**
+   * Method that check a given enum (probably works with standard classes too,
+   * but this is not checked) and maps its instances to the map with their
+   * default actions. The class must implement an Identifier interface.<br>
+   * <br>
+   * <ol>
+   * <li>for each field of the class, check if it's annotated with
+   * Subscriber.</li>
+   * <li>for all actions from the Subscriber annotation, put an item to the
+   * defaultActions with the field as the key and the actions array as the
+   * value.</li>
+   * </ol>
+   * 
+   * @param clazz
+   *          class to be mapped
+   */
+  private void initDefaultActions(Class<?> clazz) {
+    for (java.lang.reflect.Field fld : clazz.getFields()) {
+      Subscriber subscriberInfo = fld.getAnnotation(Subscriber.class);
 
-			if (Arrays.asList(fld.getType().getInterfaces()).contains(Identifier.class) && subscriberInfo != null) {
+      if (Arrays.asList(fld.getType().getInterfaces()).contains(Identifier.class) && subscriberInfo != null) {
 
-				String[] actions = subscriberInfo.value();
-				List<ActionEntry> foundActionEntries = new ArrayList<>();
-				for (String action : actions) {
-					foundActionEntries.add(this.entries.get(action));
-				}
+        String[] actions = subscriberInfo.value();
+        List<ActionEntry> foundActionEntries = new ArrayList<>();
+        for (String action : actions) {
+          foundActionEntries.add(this.entries.get(action));
+        }
 
-				Identifier<?> identifier;
-				try {
-					identifier = (Identifier<?>) fld.get(null);
-					defaultActions.put(identifier,
-							foundActionEntries.toArray(new ActionEntry[foundActionEntries.size()]));
-				} catch (IllegalArgumentException | IllegalAccessException e) {
-					throw new RuntimeException("failed to initialize EntityFactory.", e);
-				}
-			}
-		}
-	}
+        Identifier<?> identifier;
+        try {
+          identifier = (Identifier<?>) fld.get(null);
+          defaultActions.put(identifier, foundActionEntries.toArray(new ActionEntry[foundActionEntries.size()]));
+        } catch (IllegalArgumentException | IllegalAccessException e) {
+          throw new RuntimeException("failed to initialize EntityFactory.", e);
+        }
+      }
+    }
+  }
 
-	/**
-	 * find an action entry by given name.
-	 * 
-	 * @param name
-	 *            action name
-	 * @return action entry
-	 */
-	public static ActionEntry byName(String name) {
-		return getInstance().entries.get(name);
-	}
+  /**
+   * find an action entry by given name.
+   * 
+   * @param name
+   *          action name
+   * @return action entry
+   */
+  public static ActionEntry byName(String name) {
+    return getInstance().entries.get(name);
+  }
 
-	/**
-	 * remove all subscribers from all actions.
-	 */
-	public static void reset() {
-		for (ActionEntry entry : getInstance().entries.values()) {
-			entry.subscribers.clear();
-		}
+  /**
+   * remove all subscribers from all actions.
+   */
+  public static void reset() {
+    for (ActionEntry entry : getInstance().entries.values()) {
+      entry.subscribers.clear();
+    }
 
-	}
+  }
 
-	/**
-	 * convenience method, just actionsByTrigger called on getInstance().
-	 * 
-	 * @param trig
-	 *            trigger
-	 * @return actions for that trigger
-	 */
-	public List<ActionEntry> getActionsByTrigger(TriggerType trig) {
-		Map<TriggerType, List<ActionEntry>> entryMap = this.entriesByTrigger;
-		List<ActionEntry> entriesByTrigger = entryMap.get(trig);
+  /**
+   * convenience method, just actionsByTrigger called on getInstance().
+   * 
+   * @param trig
+   *          trigger
+   * @return actions for that trigger
+   */
+  public List<ActionEntry> getActionsByTrigger(TriggerType trig) {
+    Map<TriggerType, List<ActionEntry>> entryMap = this.entriesByTrigger;
+    List<ActionEntry> entriesByTrigger = entryMap.get(trig);
 
-		if (entriesByTrigger == null) {
-			entriesByTrigger = new ArrayList<>();
-			entryMap.put(trig, entriesByTrigger);
-		}
+    if (entriesByTrigger == null) {
+      entriesByTrigger = new ArrayList<>();
+      entryMap.put(trig, entriesByTrigger);
+    }
 
-		return entriesByTrigger;
-	}
+    return entriesByTrigger;
+  }
 
-	/**
-	 * get a list of all actions for a trigger type.
-	 * 
-	 * @param trig
-	 *            trigger
-	 * @return list of all actions for that trigger
-	 */
-	public static List<ActionEntry> actionsByTrigger(TriggerType trig) {
-		return getInstance().getActionsByTrigger(trig);
-	}
+  /**
+   * get a list of all actions for a trigger type.
+   * 
+   * @param trig
+   *          trigger
+   * @return list of all actions for that trigger
+   */
+  public static List<ActionEntry> actionsByTrigger(TriggerType trig) {
+    return getInstance().getActionsByTrigger(trig);
+  }
 
-	/**
-	 * execute every action for a given trigger on all subscribed HasAction
-	 * items.
-	 * 
-	 * @param trig
-	 *            trigger
-	 */
-	public static synchronized void activateTrigger(TriggerType trig) {
+  /**
+   * execute every action for a given trigger on all subscribed HasAction items.
+   * 
+   * @param trig
+   *          trigger
+   */
+  public static void activateTrigger(TriggerType trig) {
 
-		for (ActionEntry holder : actionsByTrigger(trig)) {
+    for (ActionEntry holder : actionsByTrigger(trig)) {
 
-			try {
-				for (HasAction ent : holder.subscribers) {
-					holder.action.doAction(ent);
-				}
-			} catch (Throwable t) {
-				RuntimeException e = new RuntimeException("Exception occured during action " + holder.toString(), t);
-				throw e;
-			}
+      try {
+        for (HasAction ent : holder.subscribers) {
+          holder.action.doAction(ent);
+        }
+      } catch (Throwable t) {
+        RuntimeException e = new RuntimeException("Exception occured during action " + holder.toString(), t);
+        throw e;
+      }
 
-		}
+    }
 
-	}
+  }
 
-	/**
-	 * execute every action for a given trigger only on given HasAction items.
-	 * If the items do not have any action, ignore them.
-	 * 
-	 * @param trig
-	 *            trigger
-	 * @param ents
-	 *            items to trigger
-	 */
-	public static void activateTrigger(TriggerType trig, HasAction... ents) {
-		for (ActionEntry holder : actionsByTrigger(trig)) {
+  /**
+   * execute every action for a given trigger only on given HasAction items. If
+   * the items do not have any action, ignore them.
+   * 
+   * @param trig
+   *          trigger
+   * @param ents
+   *          items to trigger
+   */
+  public static void activateTrigger(TriggerType trig, HasAction... ents) {
+    List<Updates> updates = new ArrayList<>();
 
-			for (HasAction ent : ents) {
-				if (ent.getActions().contains(holder.action)) {
-					holder.action.doAction(ent);
-				}
-			}
-		}
+    for (ActionEntry holder : actionsByTrigger(trig)) {
 
-	}
+      for (HasAction ent : ents) {
+        if (ent.getActions().contains(holder.action)) {
+          Updates upd = holder.action.doAction(ent);
+          if (upd != null) {
+            updates.add(upd);
+          }
+        }
+      }
 
-	public static ActionEntry[] getDefaultActions(Identifier<?> identifier) {
-		return getInstance().defaultActions.get(identifier);
-	}
+    }
 
-	/**
-	 * class for a list item holding a single action, a trigger and a list of
-	 * subscriber items.
-	 * 
-	 * @author MacGregor
-	 *
-	 */
-	public class ActionEntry {
-		/** action held. */
-		private final Action<HasAction> action;
-		/** trigger. */
-		private final TriggerType trigger;
-		/** subscribed HasAction items. */
-		private final List<HasAction> subscribers;
+    for (Updates upd : updates) {
+      for (Entry<HasAction, List<String>> e : upd.getActionsToAdd().entrySet()) {
 
-		/**
-		 * constructor.
-		 * 
-		 * @param trigger
-		 *            trigger
-		 * @param action
-		 *            action
-		 */
-		private ActionEntry(TriggerType trigger, Action<HasAction> action) {
-			this.trigger = trigger;
-			this.action = action;
-			this.subscribers = Collections.synchronizedList(new LinkedList<>());
-		}
+      }
+      for (Entry<HasAction, List<String>> e : upd.getActionsToRemove().entrySet()) {
 
-		/**
-		 * add a subscriber.
-		 * 
-		 * @param ent
-		 *            HasAction item
-		 */
-		public void addSubscriber(HasAction ent) {
-			subscribers.add(ent);
-		}
+      }
+      for (Entry<Field, List<Entity>> e : upd.getEntitiesToAdd().entrySet()) {
 
-		/**
-		 * remove a subscriber.
-		 * 
-		 * @param ent
-		 *            HasAction item
-		 */
-		public void removeSubscriber(HasAction ent) {
-			subscribers.remove(ent);
-		}
+      }
+      for (Entity e : upd.getEntitiesToKill()) {
 
-		/**
-		 * getter.
-		 * 
-		 * @return the action
-		 */
-		public Action<HasAction> getAction() {
-			return action;
-		}
+      }
+      for (Entry<Field, TileType> e : upd.getFieldsToChange().entrySet()) {
 
-		@Override
-		public String toString() {
-			return action.getClass().getSimpleName() + " - trigger: " + trigger;
-		}
+      }
 
-	}
+    }
 
-	/**
-	 * instance holder for the ActonHolder.
-	 * 
-	 * @author MacGregor
-	 *
-	 */
-	private enum InstanceHolder {
-		/** the ActionHolder instance. */
-		INSTANCE;
+  }
 
-		/** the instance. */
-		private ActionHolder instance;
+  public static ActionEntry[] getDefaultActions(Identifier<?> identifier) {
+    return getInstance().defaultActions.get(identifier);
+  }
 
-		/**
-		 * constructor.
-		 */
-		private InstanceHolder() {
-			this.instance = new ActionHolder();
-		}
-	}
+  /**
+   * class for a list item holding a single action, a trigger and a list of
+   * subscriber items.
+   * 
+   * @author MacGregor
+   *
+   */
+  public class ActionEntry {
+    /** action held. */
+    private final Action<HasAction> action;
+    /** trigger. */
+    private final TriggerType trigger;
+    /** subscribed HasAction items. */
+    private final List<HasAction> subscribers;
+
+    /**
+     * constructor.
+     * 
+     * @param trigger
+     *          trigger
+     * @param action
+     *          action
+     */
+    private ActionEntry(TriggerType trigger, Action<HasAction> action) {
+      this.trigger = trigger;
+      this.action = action;
+      this.subscribers = Collections.synchronizedList(new LinkedList<>());
+    }
+
+    /**
+     * add a subscriber.
+     * 
+     * @param ent
+     *          HasAction item
+     */
+    public void addSubscriber(HasAction ent) {
+      subscribers.add(ent);
+    }
+
+    /**
+     * remove a subscriber.
+     * 
+     * @param ent
+     *          HasAction item
+     */
+    public void removeSubscriber(HasAction ent) {
+      subscribers.remove(ent);
+    }
+
+    /**
+     * getter.
+     * 
+     * @return the action
+     */
+    public Action<HasAction> getAction() {
+      return action;
+    }
+
+    @Override
+    public String toString() {
+      return action.getClass().getSimpleName() + " - trigger: " + trigger;
+    }
+
+  }
+
+  /**
+   * instance holder for the ActonHolder.
+   * 
+   * @author MacGregor
+   *
+   */
+  private enum InstanceHolder {
+    /** the ActionHolder instance. */
+    INSTANCE;
+
+    /** the instance. */
+    private ActionHolder instance;
+
+    /**
+     * constructor.
+     */
+    private InstanceHolder() {
+      this.instance = new ActionHolder();
+    }
+  }
 
 }
