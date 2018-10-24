@@ -63,6 +63,7 @@ public class GrowForestAction implements FieldAction {
       /*
        * for every possible target, check if a new tree could grow there.
        */
+      Updates updates = new Updates();
       for (Point target : targets) {
         Field targetField = map.get(target).getField();
         if ((!fld.equals(targetField)) && trees < TREES_SPREAD) {
@@ -71,7 +72,7 @@ public class GrowForestAction implements FieldAction {
           continue;
         } else if (Arrays.asList(FORBIDDEN_TYPES).contains(targetField.getType())) {
           if (targetField.getType() == TileType.DESERT) {
-            targetField.setType(TileType.MEADOW);
+            updates.changeField(targetField, TileType.MEADOW);
           }
           continue;
         } else if (countTrees(targetField) > TREES_MAX) {
@@ -101,12 +102,12 @@ public class GrowForestAction implements FieldAction {
        */
       Field growField = targetFields.get(Utils.randomInt(0, targetFields.size()));
 
-      Updates updates = new Updates();
       updates.addEntities(growField, new EntityWithPosition(EntityType.PINETREE));
 
       if (!(growField.getType() == TileType.FOREST) && (countTrees(growField) > TREES_TO_TRANSFORM)) {
         updates.changeField(growField, TileType.FOREST);
       }
+      return updates;
     }
 
     return null;

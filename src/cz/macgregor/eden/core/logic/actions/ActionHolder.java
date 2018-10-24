@@ -29,6 +29,8 @@ import cz.macgregor.eden.util.filecrawler.ResourceEntry;
 public class ActionHolder {
   /** map of the action entries by name. */
   private final Map<String, ActionEntry> entries;
+  /** map of the action entries by class. */
+  private final Map<Class<?>, ActionEntry> actionsByClass;
   /** map of the actions for each trigger. */
   private final Map<TriggerType, List<ActionEntry>> entriesByTrigger;
   /** default actions for each HasAction. */
@@ -43,6 +45,7 @@ public class ActionHolder {
    */
   private ActionHolder() {
     this.entries = new HashMap<>();
+    this.actionsByClass = new HashMap<>();
     this.entriesByTrigger = new HashMap<>();
     this.defaultActions = new HashMap<>();
 
@@ -84,6 +87,7 @@ public class ActionHolder {
         @SuppressWarnings("unchecked")
         ActionEntry entry = new ActionEntry(actionInfo.trigger(), (Action<HasAction>) clazz.newInstance());
         entries.put(actionInfo.name(), entry);
+        actionsByClass.put(clazz, entry);
         getActionsByTrigger(actionInfo.trigger()).add(entry);
       }
 
@@ -142,6 +146,10 @@ public class ActionHolder {
     return getInstance().entries.get(name);
   }
 
+  public static ActionEntry byClass(Class<?> clazz) {
+    return getInstance().actionsByClass.get(clazz);
+  }
+
   /**
    * remove all subscribers from all actions.
    */
@@ -189,12 +197,16 @@ public class ActionHolder {
    *          trigger
    */
   public static void activateTrigger(TriggerType trig) {
+    List<Updates> updates = new ArrayList<>();
 
     for (ActionEntry holder : actionsByTrigger(trig)) {
 
       try {
         for (HasAction ent : holder.subscribers) {
-          holder.action.doAction(ent);
+          Updates upd = holder.action.doAction(ent);
+          if (upd != null) {
+            updates.add(upd);
+          }
         }
       } catch (Throwable t) {
         RuntimeException e = new RuntimeException("Exception occured during action " + holder.toString(), t);
@@ -202,6 +214,8 @@ public class ActionHolder {
       }
 
     }
+
+    update(updates);
 
   }
 
@@ -230,25 +244,28 @@ public class ActionHolder {
 
     }
 
+    update(updates);
+
+  }
+
+  public static void update(List<Updates> updates) {
     for (Updates upd : updates) {
       for (Entry<HasAction, List<String>> e : upd.getActionsToAdd().entrySet()) {
-
+        e.getValue().forEach((a) -> e.getKey().addAction(ActionHolder.byName(a)));
       }
       for (Entry<HasAction, List<String>> e : upd.getActionsToRemove().entrySet()) {
-
+        e.getValue().forEach((a) -> e.getKey().removeAction(ActionHolder.byName(a)));
       }
       for (Entry<Field, List<Entity>> e : upd.getEntitiesToAdd().entrySet()) {
-
+        e.getKey().addEntities(e.getValue());
       }
       for (Entity e : upd.getEntitiesToKill()) {
-
+        e.kill();
       }
       for (Entry<Field, TileType> e : upd.getFieldsToChange().entrySet()) {
-
+        e.getKey().setType(e.getValue());
       }
-
     }
-
   }
 
   public static ActionEntry[] getDefaultActions(Identifier<?> identifier) {

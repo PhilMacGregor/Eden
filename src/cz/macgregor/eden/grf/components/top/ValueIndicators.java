@@ -9,45 +9,45 @@ import cz.macgregor.eden.core.logic.indicator.Indicator;
  *
  */
 public enum ValueIndicators implements Indicator {
-	/** wood amount. */
-	WOOD("img.icons.resources.logs.png", "Døevo"),
-	/** world population. */
-	POPULATION("img.icons.resources.population.png", "Populace"),
-	/** number of fields explored so far. */
-	MAP("img.icons.resources.map.png", "Prozkoumané území");
+  /** wood amount. */
+  WOOD("img.icons.resources.logs.png", "DÅ™evo"),
+  /** world population. */
+  POPULATION("img.icons.resources.population.png", "Populace"),
+  /** number of fields explored so far. */
+  MAP("img.icons.resources.map.png", "ProzkoumanÃ© ÃºzemÃ­");
 
-	/** the indicator. */
-	private ValueIndicator indicator;
+  /** the indicator. */
+  private ValueIndicator indicator;
 
-	/**
-	 * constructor.
-	 * 
-	 * @param icon
-	 *            icon qualified name
-	 * @param name
-	 *            tooltip
-	 */
-	private ValueIndicators(String icon, String name) {
-		this.indicator = new ValueIndicator(icon, name);
-	}
+  /**
+   * constructor.
+   * 
+   * @param icon
+   *          icon qualified name
+   * @param name
+   *          tooltip
+   */
+  private ValueIndicators(String icon, String name) {
+    this.indicator = new ValueIndicator(icon, name);
+  }
 
-	public ValueIndicator getIndicator() {
-		return indicator;
-	}
+  public ValueIndicator getIndicator() {
+    return indicator;
+  }
 
-	@Override
-	public void update(int value) {
-		indicator.update(value);
-	}
+  @Override
+  public void update(int value) {
+    indicator.update(value);
+  }
 
-	@Override
-	public void reset() {
-		indicator.reset();
-	}
+  @Override
+  public void reset() {
+    indicator.reset();
+  }
 
-	@Override
-	public int getValue() {
-		return indicator.getValue();
-	}
+  @Override
+  public int getValue() {
+    return indicator.getValue();
+  }
 
 }
