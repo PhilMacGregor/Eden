@@ -23,7 +23,7 @@ public class TopPanel extends JPanel {
 	public TopPanel() {
 		super();
 		this.infoTextField = new JTextField();
-		infoTextField.setText("tady budou suroviny a dalöÌ uûiteËnÈ blbosti");
+		infoTextField.setText("tady budou suroviny a dal≈°√≠ u≈æiteƒçn√© blbosti");
 		infoTextField.setEditable(false);
 		infoTextField.setPreferredSize(new Dimension(600, 40));
 		this.add(infoTextField);
